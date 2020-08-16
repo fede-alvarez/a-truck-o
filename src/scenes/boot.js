@@ -12,6 +12,13 @@ export default class Boot extends Phaser.Scene
         // Loading assets
         this.load.image('player', this.path + 'entities/truck_01.png');
         this.load.image('bullet', this.path + 'entities/bullet_72.png');
+
+        this.load.image('ground', this.path + 'entities/ground_01.png');
+        this.load.image('rocks',  this.path + 'entities/rocks.png');
+        this.load.image('tree',   this.path + 'entities/tree_01.png');
+        this.load.image('person', this.path + 'entities/person.png');
+
+        this.load.spritesheet('car', this.path + 'entities/car_14x13.png', {frameWidth:14, frameHeight:13} );
      
         // Displaying Progress
         const progress = this.add.graphics();

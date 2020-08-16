@@ -19,6 +19,7 @@ const config = {
         debugShowBody: false
     }
   },
+  backgroundColor:'#472D3C',
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH

@@ -3,9 +3,117 @@ export default class Background extends Phaser.GameObjects.Group
     constructor(scene)
     {
         super(scene);
-        
+
         this.maxScalePoint = scene.maxScalePoint;
         this.minScalePoint = scene.minScalePoint;
+
+        this.scene = scene;
+        this.canvasSize = this.scene.getCanvasSize();
+
+        let bgSky = this.scene.add.graphics();
+        bgSky.fillStyle(0x81c9e6);
+        bgSky.fillRect(0, 0, this.canvasSize.w, 33);
+        
+        this.createTrees();
+        this.createSpeedLines();
+        //this.createGroundTiles();
+        //this.createRoadLines();
+    }
+
+    update ()
+    {
+
+    }
+
+    createTrees ()
+    {
+        /** Trees */
+        for (let i = 0; i < 10; i++)
+        {
+            let tree = this.scene.add.image(i*60, 32, 'tree');
+            let scalePos = this.calculateScale(tree.y);
+            tree.setScale(scalePos.x,scalePos.y);
+            this.add(tree);
+
+            this.scene.tweens.add({
+                targets: tree,
+                x: tree.x - 60,
+                duration:1000,
+                ease: 'Linear',
+                repeat: -1,
+            });
+        }
+    }
+
+    createGroundTiles ()
+    {
+        /** Ground Tiles */
+        for (let i = 0; i < 10; i++)
+        {
+            let groundTile = this.scene.add.image(this.canvasSize.w + 32, 0, 'ground');
+            groundTile.y = Phaser.Math.Between(50,this.canvasSize.h - 100);
+            console.log(groundTile.y);
+
+            let scalePos = this.calculateScale(groundTile.y);
+            groundTile.setScale(scalePos.x,scalePos.y);
+            this.add(groundTile);
+
+            this.scene.tweens.add({
+                targets: groundTile,
+                x: -32,
+                duration:2000,
+                ease: 'Linear',
+                repeat: -1,
+            });
+        }
+    }
+
+    createSpeedLines ()
+    {
+        for (let i=0; i<10; i++)
+        {
+            let lineGraph = this.scene.add.graphics();
+            lineGraph.fillStyle(0xCFC6B9, Phaser.Math.Between(0.1,1));
+            lineGraph.fillRect(0, 18*i, Phaser.Math.Between(50, 100), 1);
+            lineGraph.x = this.canvasSize.w + 100;
+            lineGraph.y = 10;
+            
+            this.add(lineGraph);
+
+            this.scene.tweens.add({
+                targets: lineGraph,
+                x: -150,
+                duration:2000,
+                delay: Phaser.Math.Between(600, 6000),
+                ease: 'Sine.easeInOut',
+                repeat: -1,
+            });
+        }
+    }
+
+    createRoadLines ()
+    {
+        /** Road Lines */
+        for (let i = 0; i < 10; i++)
+        {
+            let lineGraph = this.scene.add.graphics();
+            lineGraph.fillStyle(0xFFFFFF, 0.5);
+            lineGraph.fillRect(0, 0, 60, 5);
+            lineGraph.x = i*80;
+            lineGraph.y = 85;
+            
+            let scalePos = this.calculateScale(lineGraph.y);
+            lineGraph.setScale(scalePos.x,scalePos.y);
+            this.add(lineGraph);
+
+            this.scene.tweens.add({
+                targets: lineGraph,
+                x: lineGraph.x - 80,
+                duration:1000,
+                ease: 'Linear',
+                repeat: -1,
+            });
+        }
     }
 
     calculateScale ( positionY )

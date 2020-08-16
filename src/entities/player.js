@@ -8,6 +8,9 @@ export default class Player extends Phaser.GameObjects.Sprite
 
         this.scene = scene;
         this.speed = 50;
+        this.fireSpeed = 300;
+
+        this.vel={x:20, y:15};
 
         this.keyW = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.keyA = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -17,34 +20,27 @@ export default class Player extends Phaser.GameObjects.Sprite
         this.maxScalePoint = scene.maxScalePoint;
         this.minScalePoint = scene.minScalePoint;
 
-        this.bullets = scene.physics.add.group({ defaultKey:'bullet', maxSize: 10 });
+        this.bullets = scene.physics.add.group({ defaultKey:'bullet', maxSize: 15 });
         
         scene.input.on('pointerdown', this.fireWeapon, this);
-
-        let graphics = new Phaser.GameObjects.Graphics(scene);
-        graphics.lineStyle(5, 0xFF00FF, 1.0);
-        graphics.beginPath();
-        graphics.moveTo(10, 10);
-        graphics.lineTo(50, 50);
-        graphics.closePath();
-        graphics.strokePath();
-
     }
 
     update ()
     {
         if (this.keyW.isDown)
         {
-            this.y -= (this.y - 8) / this.speed;
+            //this.y -= (this.y - 8) / this.speed;
+            this.body.setVelocityY(-this.vel.y);
         }else if (this.keyS.isDown){
-            this.y += (this.y + 8) / this.speed;
+            //this.y += (this.y + 8) / this.speed;
+            this.body.setVelocityY(this.vel.y);
         }
 
         if (this.keyA.isDown)
         {
-            this.x -= (this.x - 8) / this.speed;
+            this.body.setVelocityX(-this.vel.x);
         }else if (this.keyD.isDown){
-            this.x += (this.x + 8) / this.speed;
+            this.body.setVelocityX(this.vel.x);
         }
 
         /** Scaling */
@@ -75,14 +71,15 @@ export default class Player extends Phaser.GameObjects.Sprite
         let targetX = pointer.x, 
             targetY = pointer.y;
 
-        let angle = Phaser.Math.Angle.Between(this.x, this.y, targetX+this.scene.cameras.main.scrollX, targetY+this.scene.cameras.main.scrollY);
         let bullet = this.bullets.get(this.x, this.y);
         if (bullet) 
         {
+            let angle = Phaser.Math.Angle.Between(this.x, this.y, targetX+this.scene.cameras.main.scrollX, targetY+this.scene.cameras.main.scrollY);
+
             bullet.setActive(true);
             bullet.setVisible(true);
             bullet.rotation=angle;
-            this.scene.physics.moveTo(bullet, targetX, targetY, 200);
+            this.scene.physics.moveTo(bullet, targetX, targetY, this.fireSpeed);
         }
     }
 
