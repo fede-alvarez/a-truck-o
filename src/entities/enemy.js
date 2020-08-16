@@ -6,7 +6,8 @@ export default class Enemy extends Phaser.GameObjects.Sprite
         scene.physics.world.enable(this);
         scene.add.existing(this);
 
-        this.body.setImmovable();
+        //this.body.setImmovable();
+        this.body.setMass(2000);
 
         /*this.body.immovable = true;
         this.body.moves = false;*/

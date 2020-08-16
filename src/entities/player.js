@@ -21,12 +21,49 @@ export default class Player extends Phaser.GameObjects.Sprite
         this.minScalePoint = scene.minScalePoint;
 
         this.bullets = scene.physics.add.group({ defaultKey:'bullet', maxSize: 15 });
+
+        this.dustParticles = scene.add.particles('dust');
+        let self = this;
+        let emitter = this.dustParticles.createEmitter({
+            scale : {start:1, end:0},
+            speed: {
+                onEmit: function (particle, key, t, value)
+                {
+                    return self.body.speed;
+                }
+            },
+            lifespan: {
+                
+                onEmit: function (particle, key, t, value)
+                {
+                    return Phaser.Math.Percent(self.body.speed, 0, 300) * 20000;
+                }
+            },
+            alpha: {
+                onEmit: function (particle, key, t, value)
+                {
+                    return Phaser.Math.Percent(self.body.speed, 0, 300) * 1000;
+                }
+            },
+            blendMode: 'ADD',
+            frequency: 110,
+            maxParticles: 10,
+            x:this.x,
+            y:this.y
+        });
+
+        emitter.startFollow(this);
         
         scene.input.on('pointerdown', this.fireWeapon, this);
     }
 
     update ()
     {
+        if (this.y > this.maxScalePoint.y) 
+            this.body.setVelocityY(0);
+        if (this.y < this.minScalePoint.y)
+            this.body.setVelocityY(0);
+            
         if (this.keyW.isDown)
         {
             //this.y -= (this.y - 8) / this.speed;
@@ -44,10 +81,7 @@ export default class Player extends Phaser.GameObjects.Sprite
         }
 
         /** Scaling */
-        if (this.y > this.maxScalePoint.y) 
-            this.y = this.maxScalePoint.y;
-        if (this.y < this.minScalePoint.y)
-            this.y = this.minScalePoint.y;
+        
 
         let scaleMod = this.calculateScale(this.y);
         this.setScale(scaleMod.x,scaleMod.y);

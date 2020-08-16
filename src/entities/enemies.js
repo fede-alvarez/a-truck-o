@@ -6,6 +6,8 @@ export default class Enemies extends Phaser.Physics.Arcade.Group
     {
         super(scene);
 
+        
+        
         this.maxScalePoint = scene.maxScalePoint;
         this.minScalePoint = scene.minScalePoint;
 
@@ -28,22 +30,25 @@ export default class Enemies extends Phaser.Physics.Arcade.Group
 
             this.add(enemy);
 
-            this.scene.tweens.add({
-                targets: enemy,
-                x: -64,
-                duration: Phaser.Math.Between(3000, 6000),
-                delay: Phaser.Math.Between(2000, 6000),
-                ease: 'Sine.easeInOut',
-                repeat: -1,
-            });            
+            enemy.body.setVelocityX(Phaser.Math.Between(-80, -140));    
         }
 
-        this.scene.physics.add.collider(this.scene.player, this);
+        let player = this.scene.player;
+
+        this.scene.physics.add.collider(player, this);
+        this.scene.physics.add.collider(this, this);
+        this.scene.physics.add.collider(this, player.bullets, this.onBulletImpact, null, this);
+    }
+
+    onBulletImpact (enemy, bullet)
+    {
+        bullet.destroy();
     }
 
     update ()
     {
         this.scaleWhileActive();
+        this.scene.physics.world.wrap(this, 32);
     }
 
     scaleWhileActive ()
@@ -55,9 +60,15 @@ export default class Enemies extends Phaser.Physics.Arcade.Group
                 let enemyScale = this.calculateScale(enemy.y);
                 enemy.setScale(enemyScale.x, enemyScale.y);
 
-                let isBetweenBonds = Phaser.Geom.Rectangle.Overlaps(this.scene.physics.world.bounds, enemy.getBounds());
+                /** Scaling */
+                if (this.y > this.maxScalePoint.y) 
+                    this.y = this.maxScalePoint.y;
+                if (this.y < this.minScalePoint.y)
+                    this.y = this.minScalePoint.y;
+
+                /*let isBetweenBonds = Phaser.Geom.Rectangle.Overlaps(this.scene.physics.world.bounds, enemy.getBounds());
                 if (!isBetweenBonds)
-                    enemy.setActive(false);
+                    enemy.setActive(false);*/
             }
         }.bind(this));
     }

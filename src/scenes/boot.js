@@ -17,6 +17,8 @@ export default class Boot extends Phaser.Scene
         this.load.image('rocks',  this.path + 'entities/rocks.png');
         this.load.image('tree',   this.path + 'entities/tree_01.png');
         this.load.image('person', this.path + 'entities/person.png');
+        
+        this.load.image('dust', this.path + 'particles/dust.png');
 
         this.load.spritesheet('car', this.path + 'entities/car_14x13.png', {frameWidth:14, frameHeight:13} );
      
