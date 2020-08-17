@@ -1,13 +1,12 @@
-export default class Enemy extends Phaser.Physics.Arcade.Sprite
+export default class Enemy extends Phaser.GameObjects.Sprite//Phaser.Physics.Arcade.Sprite
 {
     constructor(scene, x, y)
     {
         super(scene, x, y, 'car');
         
         scene.add.existing(this);
+        //scene.physics.world.enable(this, Phaser.Physics.Arcade.DYNAMIC_BODY);
         scene.physics.add.existing(this);
-
-        this.enableBody(false);
 
         this.anims.play('car');
 

@@ -18,6 +18,10 @@ export default class Boot extends Phaser.Scene
         this.load.image('truck_turret', this.path + 'entities/truck/turret_base.png');
         this.load.image('truck_canon', this.path + 'entities/truck/turret_canon.png');
 
+        this.load.image('bg', this.path + 'bg/sky.png');
+        this.load.image('clouds', this.path + 'bg/clouds.png');
+        this.load.image('mountain', this.path + 'bg/mountain.png');
+
         /** GUI */
         this.load.image('truck_hp', this.path + 'ui/hp_bar.png');
 

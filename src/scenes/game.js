@@ -47,8 +47,6 @@ export default class Game extends Phaser.Scene
         this.enemies = new Enemies(this);
 
         this.gui = new Gui(this);
-        this.gui.create();
-        this.gui.setDepth(2);
     }
 
     update ()

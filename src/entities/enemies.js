@@ -1,6 +1,6 @@
 import Enemy from "./enemy";
 
-export default class Enemies extends Phaser.Physics.Arcade.Group
+export default class Enemies extends Phaser.GameObjects.Group //Phaser.Physics.Arcade.Group
 {
     constructor(scene)
     {
@@ -26,12 +26,12 @@ export default class Enemies extends Phaser.Physics.Arcade.Group
         {
             enemy = new Enemy(this.scene, 0, 0);
             
-            enemy.x = this.canvasSize.w + 32;
+            enemy.x = Phaser.Math.Between(32, 128) * -1;
             enemy.y = Phaser.Math.Between(50, this.canvasSize.h);
 
             this.add(enemy);
 
-            let randSpeedX = Phaser.Math.Between(-70, -100);
+            let randSpeedX = Phaser.Math.Between(60, 80);
             //this.scene.physics.moveTo(enemy, player.x, player.y,randSpeedX);
             enemy.body.setVelocity(randSpeedX, 0);   
         }
@@ -68,7 +68,7 @@ export default class Enemies extends Phaser.Physics.Arcade.Group
     update ()
     {
         this.scaleWhileActive();
-        this.scene.physics.world.wrap(this, 32);
+        //this.scene.physics.world.wrap(this, 32);
     }
 
     scaleWhileActive ()
@@ -77,18 +77,19 @@ export default class Enemies extends Phaser.Physics.Arcade.Group
         {
             if (enemy.active) 
             {
-                let enemyScale = this.calculateScale(enemy.y);
-                enemy.setScale(enemyScale.x, enemyScale.y);
+                if (enemy.x > this.canvasSize.w + 32) {
+                    enemy.x = -32;
+                }
+
+                if (enemy.y > this.canvasSize.h )
+                    enemy.body.setVelocityY(0);
+                else if (enemy.y < 90) {
+                    enemy.body.setVelocityY(0);
+                }
 
                 /** Scaling */
-                if (this.y > this.maxScalePoint.y) 
-                    this.y = this.maxScalePoint.y;
-                if (this.y < this.minScalePoint.y)
-                    this.y = this.minScalePoint.y;
-
-                /*let isBetweenBonds = Phaser.Geom.Rectangle.Overlaps(this.scene.physics.world.bounds, enemy.getBounds());
-                if (!isBetweenBonds)
-                    enemy.setActive(false);*/
+                let enemyScale = this.calculateScale(enemy.y);
+                enemy.setScale(enemyScale.x, enemyScale.y);
             }
         }.bind(this));
     }

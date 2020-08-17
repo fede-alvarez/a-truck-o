@@ -10,13 +10,33 @@ export default class Background extends Phaser.GameObjects.Group
         this.scene = scene;
         this.canvasSize = this.scene.getCanvasSize();
 
-        /*
-        let bgSky = this.scene.add.graphics();
-        bgSky.fillStyle(0x81c9e6);
-        bgSky.fillRect(0, 0, this.canvasSize.w, 33);
-        bgSky.setDepth(0);
+        let bgSky = this.scene.add.image(0,0,'bg');
+        bgSky.setOrigin(0);
         this.add(bgSky);
-        */
+
+        let bgClouds = this.scene.add.image(0,0,'clouds');
+        bgClouds.setOrigin(0);
+        this.add(bgClouds);
+        
+        let bgMountain = this.scene.add.image(this.canvasSize.w,0,'mountain');
+        bgMountain.setOrigin(0);
+        this.add(bgMountain);
+
+        this.scene.tweens.add({
+            targets: bgClouds,
+            x: bgSky.x - 640,
+            duration:10000,
+            ease: 'Linear',
+            repeat: -1,
+        });
+
+        this.scene.tweens.add({
+            targets: bgMountain,
+            x: -320,
+            duration:20000,
+            ease: 'Linear',
+            repeat: -1,
+        });
         
         this.createTrees();
         this.createSpeedLines();
