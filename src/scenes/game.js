@@ -17,7 +17,7 @@ export default class Game extends Phaser.Scene
         this.input.mouse.disableContextMenu();
 
         this.juice = new phaserJuice(this);
-        
+
         let canvasWidth = this.sys.canvas.width,
             canvasHeight = this.sys.canvas.height;
 

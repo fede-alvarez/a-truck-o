@@ -22,7 +22,7 @@ export default class Enemies extends Phaser.Physics.Arcade.Group
         for (let i = 0; i < this.enemiesNumber; i++)
         {
             let enemy = new Enemy(this.scene, 0, 0);
-
+            
             enemy.x = this.canvasSize.w + 32;
             enemy.y = Phaser.Math.Between(50, this.canvasSize.h);
 
@@ -33,22 +33,29 @@ export default class Enemies extends Phaser.Physics.Arcade.Group
 
         let player = this.scene.player;
 
-        this.scene.physics.add.collider(player, this);
+        this.scene.physics.add.collider(player, this, this.onPlayerImpact, null, this);
         this.scene.physics.add.collider(this, this);
         this.scene.physics.add.collider(this, player.bullets, this.onBulletImpact, null, this);
+    }
+
+    onPlayerImpact (player, bullet)
+    {
+        this.scene.juice.flash(player);
+        let self = this;
+        this.scene.juice.shake(this.scene.cameras.main, {
+            x:0.5,
+            y:0.5,
+            onComplete: function(tween, target) {
+                self.scene.cameras.main.setPosition(0,0);
+            }
+        });
     }
 
     onBulletImpact (enemy, bullet)
     {
         bullet.destroy();
+        enemy.doDamage();
         this.scene.juice.flash(enemy);
-
-        enemy.health -= 10;
-        if (enemy.health <= 0)
-        {
-            enemy.destroy();
-            //enemy.visible = false;
-        }
     }
 
     update ()

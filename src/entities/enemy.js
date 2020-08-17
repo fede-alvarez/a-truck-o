@@ -3,8 +3,9 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite
     constructor(scene, x, y)
     {
         super(scene, x, y, 'car');
-        scene.physics.world.enable(this);
+        //scene.physics.world.enable(this);
         scene.add.existing(this);
+        scene.physics.add.existing(this);
 
         this.body.setSize(this.body.width, this.body.height*0.8);
         this.body.setOffset(0,3);
@@ -19,7 +20,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite
 
     doDamage ()
     {
-        this.health -= 5;
+        this.health -= 10;
         if (this.health <= 0)
             this.isDead();
     }
