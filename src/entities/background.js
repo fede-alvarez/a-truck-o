@@ -10,11 +10,13 @@ export default class Background extends Phaser.GameObjects.Group
         this.scene = scene;
         this.canvasSize = this.scene.getCanvasSize();
 
+        /*
         let bgSky = this.scene.add.graphics();
         bgSky.fillStyle(0x81c9e6);
         bgSky.fillRect(0, 0, this.canvasSize.w, 33);
-        bgSky.depth=1;
+        bgSky.setDepth(0);
         this.add(bgSky);
+        */
         
         this.createTrees();
         this.createSpeedLines();

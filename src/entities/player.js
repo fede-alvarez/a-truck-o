@@ -11,10 +11,18 @@ export default class Player extends Phaser.GameObjects.Container
         this.base = new Phaser.GameObjects.Sprite(scene,0,0,'truck_base');
         this.truckTrailer = new Phaser.GameObjects.Sprite(scene,0,0,'truck_trailer');
         this.truckWheels = new Phaser.GameObjects.Sprite(scene,0,0,'truck_wheels');
+
+        this.baseTurret = new Phaser.GameObjects.Sprite(scene,0,-12,'truck_turret');
+        this.truckCanon = new Phaser.GameObjects.Sprite(scene,0,-16,'truck_canon');
+
         this.add(shadow);
         this.add(this.base);
         this.add(this.truckTrailer);
         this.add(this.truckWheels);
+        this.add(this.baseTurret);
+        this.add(this.truckCanon);
+
+        this.initPos = {x:this.truckTrailer.x, y:this.truckTrailer.y};
 
         scene.tweens.add({
             targets: this.truckWheels,
@@ -38,6 +46,8 @@ export default class Player extends Phaser.GameObjects.Container
 
         this.scene = scene;
         this.speed = 50;
+        this.defaultHealth = 100;
+        this.health = 100;
         this.fireSpeed = 300;
 
         this.body.setSize(this.body.width, this.body.height*0.3);
@@ -84,8 +94,9 @@ export default class Player extends Phaser.GameObjects.Container
             y:this.y
         });
 
-        /*this.dustEmitter.startFollow(this.body);*/
+        /**  */
         
+        scene.input.on('pointermove', this.turretTrack, this);
         scene.input.on('pointerdown', this.fireWeapon, this);
     }
 
@@ -139,18 +150,45 @@ export default class Player extends Phaser.GameObjects.Container
         let targetX = pointer.x, 
             targetY = pointer.y;
 
-        let bullet = this.bullets.get(this.x, this.y);
+        let bullet = this.bullets.get(this.x+6, this.y-16);
+        let self = this;
+        this.scene.juice.shake(this.scene.cameras.main, {
+            x:0.5,
+            y:0.5,
+            onComplete: function(tween, target) {
+                self.scene.cameras.main.setPosition(0,0);
+            }
+        });
+
+        //this.truckCanon.rotation=angle;
         if (bullet) 
         {
             this.scene.physics.world.enable(bullet);
-
-            let angle = Phaser.Math.Angle.Between(this.x, this.y, targetX+this.scene.cameras.main.scrollX, targetY+this.scene.cameras.main.scrollY);
-            
             bullet.setActive(true);
             bullet.setVisible(true);
+            this.scene.juice.flash(bullet);
+            let angle = Phaser.Math.Angle.Between(this.x, this.y, targetX+this.scene.cameras.main.scrollX, targetY+this.scene.cameras.main.scrollY);
             bullet.rotation=angle;
             this.scene.physics.moveTo(bullet, targetX, targetY, this.fireSpeed);
         }
+
+        
+    }
+
+    doDamage ( amount )
+    {
+        this.health -= amount;
+
+        if (this.health <= 0)
+        {
+            console.log("Estoy muerto");
+        }
+    }
+
+    turretTrack (pointer)
+    {
+        let angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.x+this.scene.cameras.main.scrollX, pointer.y+this.scene.cameras.main.scrollY);
+        this.truckCanon.rotation=angle;
     }
 
     calculateScale ( positionY )

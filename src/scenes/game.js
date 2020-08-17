@@ -3,7 +3,8 @@ import MaxScalePoint from "../helpers/maxScalePoint";
 import MinScalePoint from "../helpers/minScalePoint";
 import Background from "../entities/background";
 import Enemies from "../entities/enemies";
-import phaserJuice from "../libs/phaserJuice.min";
+import phaserJuice from "../libs/phaserJuice";
+import Gui from "../gui/gui";
 
 export default class Game extends Phaser.Scene
 {
@@ -15,11 +16,19 @@ export default class Game extends Phaser.Scene
     create ()
     {
         this.input.mouse.disableContextMenu();
+        this.input.setDefaultCursor('url(src/assets/cursor.png), pointer');
 
         this.juice = new phaserJuice(this);
 
         let canvasWidth = this.sys.canvas.width,
             canvasHeight = this.sys.canvas.height;
+
+        this.anims.create({
+            key: 'car', 
+            frameRate:3, 
+            repeat:-1, 
+            frames: this.anims.generateFrameNumbers('car', { frames: [ 0,1 ] })
+        });
 
         /** Scale Points */
         let minScalePos = {x: canvasWidth*0.5, y:40};
@@ -36,6 +45,10 @@ export default class Game extends Phaser.Scene
 
         /** Enemies */
         this.enemies = new Enemies(this);
+
+        this.gui = new Gui(this);
+        this.gui.create();
+        this.gui.setDepth(2);
     }
 
     update ()
