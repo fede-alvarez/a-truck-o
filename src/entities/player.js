@@ -10,6 +10,10 @@ export default class Player extends Phaser.GameObjects.Sprite
         this.speed = 50;
         this.fireSpeed = 300;
 
+        
+        this.body.setSize(this.body.width, this.body.height*0.65);
+        this.body.setOffset(0,6);
+
         this.vel={x:20, y:15};
 
         this.keyW = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -24,8 +28,9 @@ export default class Player extends Phaser.GameObjects.Sprite
 
         this.dustParticles = scene.add.particles('dust');
         let self = this;
-        let emitter = this.dustParticles.createEmitter({
-            scale : {start:1, end:0},
+        this.dustEmitter = this.dustParticles.createEmitter({
+            accelerationX: -300,
+            scale : {start:0.4, end:0},
             speed: {
                 onEmit: function (particle, key, t, value)
                 {
@@ -45,14 +50,12 @@ export default class Player extends Phaser.GameObjects.Sprite
                     return Phaser.Math.Percent(self.body.speed, 0, 300) * 1000;
                 }
             },
-            blendMode: 'ADD',
             frequency: 110,
-            maxParticles: 10,
             x:this.x,
             y:this.y
         });
 
-        emitter.startFollow(this);
+        /*this.dustEmitter.startFollow(this.body);*/
         
         scene.input.on('pointerdown', this.fireWeapon, this);
     }
@@ -60,10 +63,10 @@ export default class Player extends Phaser.GameObjects.Sprite
     update ()
     {
         if (this.y > this.maxScalePoint.y) 
-            this.body.setVelocityY(0);
+            this.body.stop();
         if (this.y < this.minScalePoint.y)
-            this.body.setVelocityY(0);
-            
+            this.body.stop();
+
         if (this.keyW.isDown)
         {
             //this.y -= (this.y - 8) / this.speed;
@@ -81,10 +84,13 @@ export default class Player extends Phaser.GameObjects.Sprite
         }
 
         /** Scaling */
-        
-
         let scaleMod = this.calculateScale(this.y);
         this.setScale(scaleMod.x,scaleMod.y);
+
+        //let partScale = this.calculateScale(this.dustParticles.y);
+    
+        this.dustParticles.x = this.x - 80;
+        this.dustParticles.y = this.y - 50;
 
         /** Bullets */
         this.bullets.children.each(function(b) {
@@ -98,6 +104,8 @@ export default class Player extends Phaser.GameObjects.Sprite
                     b.setActive(false);
             }
         }.bind(this));
+
+
     }
 
     fireWeapon ( pointer )
@@ -108,8 +116,10 @@ export default class Player extends Phaser.GameObjects.Sprite
         let bullet = this.bullets.get(this.x, this.y);
         if (bullet) 
         {
-            let angle = Phaser.Math.Angle.Between(this.x, this.y, targetX+this.scene.cameras.main.scrollX, targetY+this.scene.cameras.main.scrollY);
+            this.scene.physics.world.enable(bullet);
 
+            let angle = Phaser.Math.Angle.Between(this.x, this.y, targetX+this.scene.cameras.main.scrollX, targetY+this.scene.cameras.main.scrollY);
+            
             bullet.setActive(true);
             bullet.setVisible(true);
             bullet.rotation=angle;

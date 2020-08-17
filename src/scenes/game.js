@@ -3,6 +3,7 @@ import MaxScalePoint from "../helpers/maxScalePoint";
 import MinScalePoint from "../helpers/minScalePoint";
 import Background from "../entities/background";
 import Enemies from "../entities/enemies";
+import phaserJuice from "../libs/phaserJuice.min";
 
 export default class Game extends Phaser.Scene
 {
@@ -15,6 +16,8 @@ export default class Game extends Phaser.Scene
     {
         this.input.mouse.disableContextMenu();
 
+        this.juice = new phaserJuice(this);
+        
         let canvasWidth = this.sys.canvas.width,
             canvasHeight = this.sys.canvas.height;
 

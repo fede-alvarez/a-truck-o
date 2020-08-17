@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+
 import Boot from "./scenes/boot"
 import Menu from "./scenes/menu"
 import Game from "./scenes/game"
@@ -14,9 +15,9 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-        debug: false,
+        debug: true,
         gravity: { y: 0 },
-        debugShowBody: false
+        debugShowBody: true
     }
   },
   backgroundColor:'#472D3C',

@@ -6,8 +6,6 @@ export default class Enemies extends Phaser.Physics.Arcade.Group
     {
         super(scene);
 
-        
-        
         this.maxScalePoint = scene.maxScalePoint;
         this.minScalePoint = scene.minScalePoint;
 
@@ -43,6 +41,14 @@ export default class Enemies extends Phaser.Physics.Arcade.Group
     onBulletImpact (enemy, bullet)
     {
         bullet.destroy();
+        this.scene.juice.flash(enemy);
+
+        enemy.health -= 10;
+        if (enemy.health <= 0)
+        {
+            enemy.destroy();
+            //enemy.visible = false;
+        }
     }
 
     update ()
