@@ -13,16 +13,13 @@ export default class Background extends Phaser.GameObjects.Group
         let bgSky = this.scene.add.graphics();
         bgSky.fillStyle(0x81c9e6);
         bgSky.fillRect(0, 0, this.canvasSize.w, 33);
+        bgSky.depth=1;
+        this.add(bgSky);
         
         this.createTrees();
         this.createSpeedLines();
-        //this.createGroundTiles();
-        //this.createRoadLines();
-    }
-
-    update ()
-    {
-
+        this.createGroundTiles();
+        this.createRocks();
     }
 
     createTrees ()
@@ -34,6 +31,7 @@ export default class Background extends Phaser.GameObjects.Group
             let scalePos = this.calculateScale(tree.y);
             tree.setScale(scalePos.x,scalePos.y);
             this.add(tree);
+            tree.depth=99;
 
             this.scene.tweens.add({
                 targets: tree,
@@ -51,16 +49,43 @@ export default class Background extends Phaser.GameObjects.Group
         for (let i = 0; i < 10; i++)
         {
             let groundTile = this.scene.add.image(this.canvasSize.w + 32, 0, 'ground');
-            groundTile.y = Phaser.Math.Between(50,this.canvasSize.h - 100);
-            console.log(groundTile.y);
-
-            let scalePos = this.calculateScale(groundTile.y);
+            groundTile.alpha=0.7;
+            let yPos = Phaser.Math.Between(50,this.canvasSize.h - 10);
+            let scalePos = this.calculateScale(yPos);
             groundTile.setScale(scalePos.x,scalePos.y);
             this.add(groundTile);
+
+            groundTile.y = yPos;
 
             this.scene.tweens.add({
                 targets: groundTile,
                 x: -32,
+                alpha:0,
+                delay:Phaser.Math.Between(500,2000),
+                duration:2000,
+                ease: 'Linear',
+                repeat: -1,
+            });
+        }
+    }
+
+    createRocks ()
+    {
+        /** Ground Rocks */
+        for (let i = 0; i < 5; i++)
+        {
+            let groundTile = this.scene.add.image(this.canvasSize.w + 32, 0, 'rocks');
+            let yPos = Phaser.Math.Between(50,this.canvasSize.h - 10);
+            let scalePos = this.calculateScale(yPos);
+            groundTile.setScale(scalePos.x,scalePos.y);
+            this.add(groundTile);
+
+            groundTile.y = yPos;
+
+            this.scene.tweens.add({
+                targets: groundTile,
+                x: -32,
+                delay:Phaser.Math.Between(500,2000),
                 duration:2000,
                 ease: 'Linear',
                 repeat: -1,

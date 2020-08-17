@@ -9,11 +9,16 @@ export default class Boot extends Phaser.Scene
 
     preload()
     {
-        // Loading assets
+        /** Truck */
         this.load.image('player', this.path + 'entities/truck_01.png');
+        this.load.image('truck_base', this.path + 'entities/truck_base.png');
+        this.load.image('truck_trailer', this.path + 'entities/truck_trailer.png');
+        this.load.image('truck_wheels', this.path + 'entities/truck_wheels.png');
+
+
         this.load.image('bullet', this.path + 'entities/bullet_72.png');
 
-        this.load.image('ground', this.path + 'entities/ground_01.png');
+        this.load.image('ground', this.path + 'entities/ground_02.png');
         this.load.image('rocks',  this.path + 'entities/rocks.png');
         this.load.image('tree',   this.path + 'entities/tree_01.png');
         this.load.image('person', this.path + 'entities/person.png');

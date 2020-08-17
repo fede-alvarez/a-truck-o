@@ -12,23 +12,27 @@ export default class Enemies extends Phaser.Physics.Arcade.Group
         this.scene = scene;
         this.canvasSize = this.scene.getCanvasSize();
 
-        this.enemiesNumber = 5;
+        this.enemiesNumber = 2;
 
         this.createEnemies();
     }
 
     createEnemies ()
     {
+        let enemy;
+
         for (let i = 0; i < this.enemiesNumber; i++)
         {
-            let enemy = new Enemy(this.scene, 0, 0);
+            enemy = new Enemy(this.scene, 0, 0);
             
             enemy.x = this.canvasSize.w + 32;
             enemy.y = Phaser.Math.Between(50, this.canvasSize.h);
 
             this.add(enemy);
 
-            enemy.body.setVelocityX(Phaser.Math.Between(-80, -140));    
+            //enemy.body.setVelocityX(Phaser.Math.Between(-80, -140)); 
+            let randSpeedX = Phaser.Math.Between(-80, -100);
+            enemy.body.setVelocity(randSpeedX, 0);   
         }
 
         let player = this.scene.player;
@@ -40,7 +44,7 @@ export default class Enemies extends Phaser.Physics.Arcade.Group
 
     onPlayerImpact (player, bullet)
     {
-        this.scene.juice.flash(player);
+        this.scene.juice.flash(player.truckTrailer);
         let self = this;
         this.scene.juice.shake(this.scene.cameras.main, {
             x:0.5,

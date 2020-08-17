@@ -1,8 +1,38 @@
-export default class Player extends Phaser.GameObjects.Sprite
+export default class Player extends Phaser.GameObjects.Container
 {
     constructor(scene, x, y)
     {
-        super(scene, x, y, 'player');
+        super(scene, x, y);
+
+        let shadow = scene.add.graphics();
+        shadow.fillStyle(0x000000, 0.1);
+        shadow.fillRect(-30, 7, 60, 10);
+        
+        this.base = new Phaser.GameObjects.Sprite(scene,0,0,'truck_base');
+        this.truckTrailer = new Phaser.GameObjects.Sprite(scene,0,0,'truck_trailer');
+        this.truckWheels = new Phaser.GameObjects.Sprite(scene,0,0,'truck_wheels');
+        this.add(shadow);
+        this.add(this.base);
+        this.add(this.truckTrailer);
+        this.add(this.truckWheels);
+
+        scene.tweens.add({
+            targets: this.truckWheels,
+            y:-1,
+            duration:100,
+            ease: 'Linear',
+            repeat: -1,
+            yoyo:true
+        });
+        scene.tweens.add({
+            targets: this.truckTrailer,
+            y:-1,
+            duration:100,
+            ease: 'Linear',
+            repeat: -1,
+            yoyo:true
+        });
+
         scene.physics.world.enable(this);
         scene.add.existing(this);
 
@@ -10,9 +40,8 @@ export default class Player extends Phaser.GameObjects.Sprite
         this.speed = 50;
         this.fireSpeed = 300;
 
-        
-        this.body.setSize(this.body.width, this.body.height*0.65);
-        this.body.setOffset(0,6);
+        this.body.setSize(this.body.width, this.body.height*0.3);
+        this.body.setOffset(-30,-4);
 
         this.vel={x:20, y:15};
 
@@ -87,8 +116,7 @@ export default class Player extends Phaser.GameObjects.Sprite
         let scaleMod = this.calculateScale(this.y);
         this.setScale(scaleMod.x,scaleMod.y);
 
-        //let partScale = this.calculateScale(this.dustParticles.y);
-    
+        /** Particles following */
         this.dustParticles.x = this.x - 80;
         this.dustParticles.y = this.y - 50;
 
@@ -104,8 +132,6 @@ export default class Player extends Phaser.GameObjects.Sprite
                     b.setActive(false);
             }
         }.bind(this));
-
-
     }
 
     fireWeapon ( pointer )
