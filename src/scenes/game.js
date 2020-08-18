@@ -5,6 +5,7 @@ import Background from "../entities/background";
 import Enemies from "../entities/enemies";
 import phaserJuice from "../libs/phaserJuice";
 import Gui from "../gui/gui";
+import Obstacles from "../entities/obstacles";
 
 export default class Game extends Phaser.Scene
 {
@@ -41,10 +42,15 @@ export default class Game extends Phaser.Scene
         this.bg = new Background(this);
 
         /** Player */
-        this.player = new Player(this, 50, 50);
+        this.player = new Player(this, 50, 60);
 
         /** Enemies */
         this.enemies = new Enemies(this);
+
+        //this.physics.add.collider(this.player, this.bg.limitsGroup);
+        //this.physics.add.collider(this.enemies, this.bg.limitsGroup);
+
+        this.obstacles = new Obstacles(this);
 
         this.gui = new Gui(this);
     }
@@ -53,6 +59,7 @@ export default class Game extends Phaser.Scene
     {
         this.player.update();
         this.enemies.update();
+        this.obstacles.update();
     }
 
     getCanvasSize ()

@@ -7,6 +7,8 @@ export default class Background extends Phaser.GameObjects.Group
         this.maxScalePoint = scene.maxScalePoint;
         this.minScalePoint = scene.minScalePoint;
 
+        this.player = null;
+
         this.scene = scene;
         this.canvasSize = this.scene.getCanvasSize();
 
@@ -42,6 +44,31 @@ export default class Background extends Phaser.GameObjects.Group
         this.createSpeedLines();
         this.createGroundTiles();
         this.createRocks();
+
+        this.createLevelLimits();
+    }
+
+    createLevelLimits ()
+    {
+        this.limitsGroup = this.scene.add.group();
+
+        let topLimit = new Phaser.GameObjects.Sprite(this.scene,0,30,'');
+        let bottomLimit = new Phaser.GameObjects.Sprite(this.scene,0,this.canvasSize.h - 5,'');
+        
+        topLimit.visible = bottomLimit.visible = false;
+
+        this.scene.physics.world.enable(topLimit);
+        this.scene.physics.world.enable(bottomLimit);
+
+        topLimit.body.setSize(640,30);
+        topLimit.body.setImmovable();
+        bottomLimit.body.setSize(640,30);
+        bottomLimit.body.setImmovable();
+
+        this.limitsGroup.add(topLimit);
+        this.limitsGroup.add(bottomLimit);
+
+        this.scene.add.existing(this.limitsGroup);
     }
 
     createTrees ()
@@ -72,7 +99,7 @@ export default class Background extends Phaser.GameObjects.Group
         {
             let groundTile = this.scene.add.image(this.canvasSize.w + 32, 0, 'ground');
             groundTile.alpha=0.7;
-            let yPos = Phaser.Math.Between(50,this.canvasSize.h - 10);
+            let yPos = Phaser.Math.Between(40,this.canvasSize.h - 10);
             let scalePos = this.calculateScale(yPos);
             groundTile.setScale(scalePos.x,scalePos.y);
             this.add(groundTile);

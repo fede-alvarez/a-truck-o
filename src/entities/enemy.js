@@ -5,7 +5,6 @@ export default class Enemy extends Phaser.GameObjects.Sprite//Phaser.Physics.Arc
         super(scene, x, y, 'car');
         
         scene.add.existing(this);
-        //scene.physics.world.enable(this, Phaser.Physics.Arcade.DYNAMIC_BODY);
         scene.physics.add.existing(this);
 
         this.anims.play('car');
@@ -15,6 +14,7 @@ export default class Enemy extends Phaser.GameObjects.Sprite//Phaser.Physics.Arc
         this.body.setSize(this.body.width, this.body.height*0.8);
         this.body.setOffset(0,3);
         this.body.setMaxVelocity(-100, 20);        
+        this.depth = this.y;
         
         this.health = 50;
     }

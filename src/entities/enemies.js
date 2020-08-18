@@ -14,25 +14,27 @@ export default class Enemies extends Phaser.GameObjects.Group //Phaser.Physics.A
 
         this.enemiesNumber = 5;
 
+        this.player = this.scene.player;
+
         this.createEnemies();
     }
 
     createEnemies ()
     {
         let player = this.scene.player;
-        let enemy;
 
         for (let i = 0; i < this.enemiesNumber; i++)
         {
-            enemy = new Enemy(this.scene, 0, 0);
+            let enemy = new Enemy(this.scene, 0, 0);
             
             enemy.x = Phaser.Math.Between(32, 128) * -1;
-            enemy.y = Phaser.Math.Between(50, this.canvasSize.h);
+            enemy.y = Phaser.Math.Between(50, this.canvasSize.h - 20);
 
             this.add(enemy);
 
-            let randSpeedX = Phaser.Math.Between(60, 80);
-            //this.scene.physics.moveTo(enemy, player.x, player.y,randSpeedX);
+            let randSpeedX = Phaser.Math.Between(30, 80);
+            
+            
             enemy.body.setVelocity(randSpeedX, 0);   
         }
 
@@ -77,14 +79,15 @@ export default class Enemies extends Phaser.GameObjects.Group //Phaser.Physics.A
         {
             if (enemy.active) 
             {
-                if (enemy.x > this.canvasSize.w + 32) {
-                    enemy.x = -32;
+                //console.log(Phaser.Math.Distance.Between(this.player.x, this.player.y, enemy.x, enemy.y));
+                if (Phaser.Math.Distance.Between(this.player.x, this.player.y, enemy.x, enemy.y) < 70) 
+                {
+                    //let randSpeedX = Phaser.Math.Between(30, 80);
+                    this.scene.physics.moveTo(enemy, this.player.x + 16, this.player.y, 20);
                 }
 
-                if (enemy.y > this.canvasSize.h )
-                    enemy.body.setVelocityY(0);
-                else if (enemy.y < 90) {
-                    enemy.body.setVelocityY(0);
+                if (enemy.x > this.canvasSize.w + 32) {
+                    enemy.x = -32 - Phaser.Math.Between(256, 512);
                 }
 
                 /** Scaling */

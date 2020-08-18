@@ -131,6 +131,8 @@ export default class Player extends Phaser.GameObjects.Container
         this.dustParticles.x = this.x - 80;
         this.dustParticles.y = this.y - 50;
 
+        this.depth = this.y + this.height * 0.5;
+
         /** Bullets */
         this.bullets.children.each(function(b) {
             if (b.active) 
@@ -152,6 +154,7 @@ export default class Player extends Phaser.GameObjects.Container
 
         let bullet = this.bullets.get(this.x+6, this.y-16);
         let self = this;
+        
         this.scene.juice.shake(this.scene.cameras.main, {
             x:0.5,
             y:0.5,
@@ -159,20 +162,17 @@ export default class Player extends Phaser.GameObjects.Container
                 self.scene.cameras.main.setPosition(0,0);
             }
         });
-
-        //this.truckCanon.rotation=angle;
+        
         if (bullet) 
         {
             this.scene.physics.world.enable(bullet);
             bullet.setActive(true);
             bullet.setVisible(true);
-            this.scene.juice.flash(bullet);
+            //this.scene.juice.flash(bullet);
             let angle = Phaser.Math.Angle.Between(this.x, this.y, targetX+this.scene.cameras.main.scrollX, targetY+this.scene.cameras.main.scrollY);
             bullet.rotation=angle;
             this.scene.physics.moveTo(bullet, targetX, targetY, this.fireSpeed);
-        }
-
-        
+        }   
     }
 
     doDamage ( amount )

@@ -22,6 +22,10 @@ export default class Boot extends Phaser.Scene
         this.load.image('clouds', this.path + 'bg/clouds.png');
         this.load.image('mountain', this.path + 'bg/mountain.png');
 
+        this.load.image('barrer', this.path + 'obstacles/barreer.png');
+        this.load.image('fire', this.path + 'obstacles/fire.png');
+        this.load.image('tires', this.path + 'obstacles/tires.png');
+
         /** GUI */
         this.load.image('truck_hp', this.path + 'ui/hp_bar.png');
 
@@ -30,7 +34,6 @@ export default class Boot extends Phaser.Scene
         this.load.image('ground', this.path + 'entities/ground_02.png');
         this.load.image('rocks',  this.path + 'entities/rocks.png');
         this.load.image('tree',   this.path + 'entities/tree_01.png');
-        this.load.image('person', this.path + 'entities/person.png');
         
         this.load.image('dust', this.path + 'particles/dust.png');
 
