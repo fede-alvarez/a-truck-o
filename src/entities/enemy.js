@@ -1,19 +1,28 @@
-export default class Enemy extends Phaser.GameObjects.Sprite//Phaser.Physics.Arcade.Sprite
+export default class Enemy extends Phaser.GameObjects.Container
 {
     constructor(scene, x, y)
     {
-        super(scene, x, y, 'car');
-        
+        super(scene, x, y);
+
+        let shadow = scene.add.graphics();
+        shadow.fillStyle(0x000000, 0.15);
+        shadow.fillEllipse(0, 5, 14, 8);
+
+        this.car = new Phaser.GameObjects.Sprite(scene,0,0,'car');
+        this.add(shadow);
+        this.add(this.car);
+
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        this.anims.play('car');
+        this.car.anims.play('car');
 
         this.name = 'car';
 
-        this.body.setSize(this.body.width, this.body.height*0.8);
-        this.body.setOffset(0,3);
-        this.body.setMaxVelocity(-100, 20);        
+        this.body.setSize(16, 10);
+        this.body.setOffset(-8,-2);
+        this.body.setMaxVelocity(300,50);  
+
         this.depth = this.y;
         
         this.health = 50;

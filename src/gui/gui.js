@@ -8,7 +8,7 @@ export default class Gui extends Phaser.GameObjects.Group
         this.scene = scene;
         this.canvasSize = this.scene.getCanvasSize();
 
-        this.lives = 3;
+        this.lives = this.scene.player.lives;
 
         this.distance = this.scene.distance;
         this.progressBarPoints = {
@@ -18,7 +18,7 @@ export default class Gui extends Phaser.GameObjects.Group
         this.progressBarActive = true;
 
         this.createHPBar();
-        this.createCooldownBar();
+        //this.createCooldownBar();
         this.createProgress();
 
         /*this.scene.add.text(60, 60, 'text', {
@@ -38,7 +38,6 @@ export default class Gui extends Phaser.GameObjects.Group
         this.progressBarPoints.start.y = this.progressBar.y;
         this.progressBarPoints.end.x = this.progressBar.x + this.progressBar.width * 0.5;
         this.progressBarPoints.end.y = this.progressBar.y;
-        console.log(this.progressBarPoints);
 
         this.progressIndicator = this.scene.add.image(this.progressBar.x - this.progressBar.width * 0.5, this.progressBar.y, 'progress_indicator');
         this.progressIndicator.setOrigin(0.5);
@@ -47,6 +46,7 @@ export default class Gui extends Phaser.GameObjects.Group
 
     updateProgress ()
     {
+        /** Progress Bar */
         if (!this.progressBarActive) return;
 
         //console.log(this.scene.distance);
@@ -67,13 +67,29 @@ export default class Gui extends Phaser.GameObjects.Group
         this.hp.setOrigin(0, 0.5);
         this.add(this.hp);
 
+        this.hpBoxes = [];
         for (let i = 0; i < this.lives; i++)
         {
             let box = this.scene.add.graphics();
-            box.fillStyle(0xCFC6B9, 1);
+            box.fillStyle(0x38D973, 1);
+            box.fillRect(2 + (i * 13), 2, 10, 12);
+            this.hpBoxes.push(box);
+        }
+    }
+
+    removeHP ()
+    {
+        let hp = this.hpBoxes.pop();
+        if (hp)
+            hp.destroy();
+        /*for (let i = 0; i < this.lives; i++)
+        {
+            let box = this.scene.add.graphics();
+            box.fillStyle(0x38D973, 1);
             box.fillRect(2 + (i * 13), 2, 10, 12);
             this.add(box);
-        }
+            this.hpBoxes.push(box);
+        }*/
     }
 
     createCooldownBar ()

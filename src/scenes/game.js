@@ -48,6 +48,7 @@ export default class Game extends Phaser.Scene
         this.enemies = new Enemies(this);
 
         this.physics.add.collider(this.player, this.bg.limitsGroup);
+        this.physics.add.collider(this.player, this.bg.playerLimits);
         this.physics.add.collider(this.enemies, this.bg.limitsGroup);
 
         this.obstacles = new Obstacles(this);

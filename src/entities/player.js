@@ -48,7 +48,9 @@ export default class Player extends Phaser.GameObjects.Container
         this.speed = 50;
         this.defaultHealth = 100;
         this.health = 100;
+        this.lives = 5;
         this.fireSpeed = 300;
+        this.isDead = false;
 
         this.body.setSize(this.body.width, this.body.height*0.3);
         this.body.setOffset(-30,-4);
@@ -102,26 +104,22 @@ export default class Player extends Phaser.GameObjects.Container
 
     update ()
     {
-        if (this.y > this.maxScalePoint.y) 
-            this.body.stop();
-        if (this.y < this.minScalePoint.y)
-            this.body.stop();
-
         if (this.keyW.isDown)
         {
-            //this.y -= (this.y - 8) / this.speed;
             this.body.setVelocityY(-this.vel.y);
         }else if (this.keyS.isDown){
-            //this.y += (this.y + 8) / this.speed;
             this.body.setVelocityY(this.vel.y);
         }
 
         if (this.keyA.isDown)
         {
+            //this.body.setVelocityX(-this.vel.x * 3);
             this.body.setVelocityX(-this.vel.x);
         }else if (this.keyD.isDown){
             this.body.setVelocityX(this.vel.x);
         }
+
+        //this.body.setVelocityX(this.vel.x);
 
         /** Scaling */
         let scaleMod = this.calculateScale(this.y);
@@ -153,6 +151,7 @@ export default class Player extends Phaser.GameObjects.Container
             targetY = pointer.y;
 
         let bullet = this.bullets.get(this.x+6, this.y-16);
+        bullet.depth = 50;
         let self = this;
         
         this.scene.juice.shake(this.scene.cameras.main, {
@@ -169,19 +168,41 @@ export default class Player extends Phaser.GameObjects.Container
             bullet.setActive(true);
             bullet.setVisible(true);
             //this.scene.juice.flash(bullet);
-            let angle = Phaser.Math.Angle.Between(this.x, this.y, targetX+this.scene.cameras.main.scrollX, targetY+this.scene.cameras.main.scrollY);
+            
+            let dist = Phaser.Math.Distance.Between(this.x, this.y, targetX, targetY);
+
+            let variation = {x:Phaser.Math.Between(-8,8), y:Phaser.Math.Between(-4,4)};
+            if (dist > 70) 
+            {
+                variation = {x:Phaser.Math.Between(-16,16), y:Phaser.Math.Between(-16,16)};
+            }
+
+            let angle = Phaser.Math.Angle.Between(this.x, this.y, targetX+variation.x, targetY+variation.y);
             bullet.rotation=angle;
-            this.scene.physics.moveTo(bullet, targetX, targetY, this.fireSpeed);
+            
+            this.scene.physics.moveTo(bullet, targetX+variation.x, targetY+variation.y, this.fireSpeed);
         }   
     }
 
     doDamage ( amount )
     {
+        if (this.isDead) return;
+
+        this.scene.juice.flash(this.truckTrailer);
+
         this.health -= amount;
+
+        let newLives = Math.ceil(this.health * 5 / this.defaultHealth);
+        if (newLives != this.lives)
+        {
+            this.scene.gui.removeHP();
+            console.log("Remove HP");
+        }
 
         if (this.health <= 0)
         {
-            console.log("Estoy muerto");
+            console.log("Player is Dead!");
+            this.isDead = true;
         }
     }
 

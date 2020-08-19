@@ -51,24 +51,37 @@ export default class Background extends Phaser.GameObjects.Group
     createLevelLimits ()
     {
         this.limitsGroup = this.scene.add.group();
+        this.playerLimits = this.scene.add.group();
 
         let topLimit = new Phaser.GameObjects.Sprite(this.scene,0,30,'');
         let bottomLimit = new Phaser.GameObjects.Sprite(this.scene,0,this.canvasSize.h - 5,'');
-        
-        topLimit.visible = bottomLimit.visible = false;
+        let leftLimit = new Phaser.GameObjects.Sprite(this.scene, -50,0, '');
+        let rightLimit = new Phaser.GameObjects.Sprite(this.scene, this.canvasSize.w - 5,0, '');
+
+        topLimit.visible = bottomLimit.visible = leftLimit.visible = rightLimit.visible = false;
 
         this.scene.physics.world.enable(topLimit);
         this.scene.physics.world.enable(bottomLimit);
+        this.scene.physics.world.enable(leftLimit);
+        this.scene.physics.world.enable(rightLimit);
 
+        leftLimit.body.setSize(20,360);
+        rightLimit.body.setSize(20,360);
         topLimit.body.setSize(640,30);
-        topLimit.body.setImmovable();
         bottomLimit.body.setSize(640,30);
+        topLimit.body.setImmovable();
         bottomLimit.body.setImmovable();
+        leftLimit.body.setImmovable();
+        rightLimit.body.setImmovable();
 
         this.limitsGroup.add(topLimit);
         this.limitsGroup.add(bottomLimit);
 
+        this.playerLimits.add(leftLimit);
+        this.playerLimits.add(rightLimit);
+
         this.scene.add.existing(this.limitsGroup);
+        this.scene.add.existing(this.playerLimits);
     }
 
     createTrees ()

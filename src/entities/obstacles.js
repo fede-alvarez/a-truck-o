@@ -27,17 +27,16 @@ export default class Obstacles extends Phaser.GameObjects.Group
         {
             let obstacle = new Obstacle(this.scene, 0, 0, this.obstaclesList[Phaser.Math.Between(0,this.obstaclesList.length-1)]);
             
-            obstacle.x = this.canvasSize.w + Phaser.Math.Between(256,512);
-            obstacle.y = Phaser.Math.Between(50,this.canvasSize.h - 10);
+            obstacle.x = this.canvasSize.w + Phaser.Math.Between(512,1024);
+            obstacle.y = Phaser.Math.Between(30,this.canvasSize.h - 20);
 
             this.add(obstacle);
 
-            let randSpeedX = Phaser.Math.Between(140, 200);
-            obstacle.body.setVelocity(-randSpeedX, 0);   
+            obstacle.body.setVelocity(-280, 0);   
         }
 
         this.scene.physics.add.collider(this, this.player, this.onPlayerImpact, null, this);
-        this.scene.physics.add.collider(this, this.player.bullets, this.onBulletImpact, null, this);
+        //this.scene.physics.add.collider(this, this.player.bullets, this.onBulletImpact, null, this);
     }
 
     onPlayerImpact (obstacle, player)
@@ -45,6 +44,7 @@ export default class Obstacles extends Phaser.GameObjects.Group
         let self = this;
         
         this.scene.juice.flash(player.truckTrailer);
+        player.body.setVelocityX(-200);
         
         this.scene.juice.shake(this.scene.cameras.main, {
             x:0.5,
@@ -58,10 +58,10 @@ export default class Obstacles extends Phaser.GameObjects.Group
         obstacle.destroy();
     }
 
-    onBulletImpact (obstacle, player)
+    onBulletImpact (obstacle, bullet)
     {
-        this.scene.juice.flash(obstacle);
-        obstacle.destroy();
+        bullet.destroy();
+        //obstacle.destroy();
     }
 
     update ()
