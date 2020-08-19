@@ -16,7 +16,7 @@ export default class Background extends Phaser.GameObjects.Group
         bgSky.setOrigin(0);
         this.add(bgSky);
 
-        let bgClouds = this.scene.add.image(0,0,'clouds');
+        let bgClouds = this.scene.add.image(this.canvasSize.w + 20,0,'clouds');
         bgClouds.setOrigin(0);
         this.add(bgClouds);
         
@@ -89,7 +89,9 @@ export default class Background extends Phaser.GameObjects.Group
         /** Trees */
         for (let i = 0; i < 10; i++)
         {
-            let tree = this.scene.add.image(i*60, 32, 'tree');
+            let randomTree = (i%2 == 0) ? 'tree2' : 'tree';
+            let tree = this.scene.add.image(i*200, 32, randomTree);
+            
             let scalePos = this.calculateScale(tree.y);
             tree.setScale(scalePos.x,scalePos.y);
             this.add(tree);
@@ -97,7 +99,7 @@ export default class Background extends Phaser.GameObjects.Group
 
             this.scene.tweens.add({
                 targets: tree,
-                x: tree.x - 60,
+                x: tree.x - 200,
                 duration:1000,
                 ease: 'Linear',
                 repeat: -1,

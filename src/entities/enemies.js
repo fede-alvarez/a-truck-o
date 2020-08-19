@@ -12,7 +12,7 @@ export default class Enemies extends Phaser.GameObjects.Group
         this.scene = scene;
         this.canvasSize = this.scene.getCanvasSize();
 
-        this.enemiesNumber = 1;
+        this.enemiesNumber = 3;
 
         this.player = this.scene.player;
 
@@ -120,7 +120,7 @@ export default class Enemies extends Phaser.GameObjects.Group
                 
                 if (playerDistance < 70) 
                 {
-                    this.scene.physics.moveTo(enemy, this.player.x + 16, this.player.y, 20);
+                    this.scene.physics.moveTo(enemy, this.player.x + 16, this.player.y - 16, 20);
                     this.fireTime++;
 
                     if (this.fireTime != 0 && this.fireTime % this.fireRate == 0)

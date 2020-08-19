@@ -36,6 +36,7 @@ export default class Boot extends Phaser.Scene
         this.load.image('ground', this.path + 'entities/ground_02.png');
         this.load.image('rocks',  this.path + 'entities/rocks.png');
         this.load.image('tree',   this.path + 'entities/tree_01.png');
+        this.load.image('tree2',   this.path + 'bg/dead_tree.png');
         
         this.load.image('dust', this.path + 'particles/dust.png');
 
