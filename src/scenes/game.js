@@ -47,10 +47,18 @@ export default class Game extends Phaser.Scene
         /** Enemies */
         this.enemies = new Enemies(this);
 
-        //this.physics.add.collider(this.player, this.bg.limitsGroup);
-        //this.physics.add.collider(this.enemies, this.bg.limitsGroup);
+        this.physics.add.collider(this.player, this.bg.limitsGroup);
+        this.physics.add.collider(this.enemies, this.bg.limitsGroup);
 
         this.obstacles = new Obstacles(this);
+
+        /** Game Progression */
+        this.goalDistance = 300;
+        this.distance = 0;
+        this.distanceTimer = 0;
+        this.distanceAddTime = 120;
+
+        this.winState = false;
 
         this.gui = new Gui(this);
     }
@@ -60,6 +68,25 @@ export default class Game extends Phaser.Scene
         this.player.update();
         this.enemies.update();
         this.obstacles.update();
+        this.gui.updateProgress();
+
+        if (this.winState) return;
+
+        this.distanceTimer++;
+
+        if (this.distanceTimer != 0 && this.distanceTimer % this.distanceAddTime == 0)
+        {
+            this.distanceTimer = 0;
+            this.distance += 1;
+
+            if (this.distance >= this.goalDistance)
+            {
+                this.distance = 0;
+                this.winState = true;
+                console.log("You Win!");
+            }
+                
+        }
     }
 
     getCanvasSize ()
