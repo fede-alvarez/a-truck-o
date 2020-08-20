@@ -109,6 +109,10 @@ export default class Player extends Phaser.GameObjects.Container
         
         scene.input.on('pointermove', this.turretTrack, this);
         scene.input.on('pointerdown', this.fireWeapon, this);
+
+        this.shootSound = scene.sound.add('sfxShoot', {volume:0.5});
+        this.uiClickSound = scene.sound.add('sfxUIClick', {volume:0.5});
+
     }
 
     update ()
@@ -159,6 +163,7 @@ export default class Player extends Phaser.GameObjects.Container
     fireWeapon ( pointer )
     {
         if (this.isDead) return;
+        this.shootSound.play();
 
         let targetX = pointer.x, 
             targetY = pointer.y;
@@ -224,6 +229,18 @@ export default class Player extends Phaser.GameObjects.Container
         this.explosionEmitter.setPosition(this.x, this.y);
         this.explosionEmitter.explode();
 
+        let music = this.scene.music;
+        let self = this;
+        this.scene.tweens.add({ 
+            targets: music, 
+            volume: 0, 
+            duration: 700,
+            onComplete : function() {
+                if (self.scene.music.isPlaying)
+                    self.scene.music.stop();
+            } 
+        }); 
+        
         this.scene.gui.showGameOver();
     }
 

@@ -32,6 +32,9 @@ export default class Enemies extends Phaser.GameObjects.Group
             lifespan: 100,
         });
 
+        this.shootSound = scene.sound.add('sfxShoot', {volume:0.15});
+        this.carHitSound = scene.sound.add('sfxCarsHit', {volume:0.5});
+        
         this.createEnemies();
     }
 
@@ -71,8 +74,8 @@ export default class Enemies extends Phaser.GameObjects.Group
             enemy.body.setVelocity(20, 0);   
         }
 
-        this.scene.physics.add.collider(player, this); //, this.onPlayerImpact, null, this); <- Callback
-        this.scene.physics.add.collider(this, this);
+        this.scene.physics.add.collider(player, this, this.onPlayerImpact, null, this);
+        this.scene.physics.add.collider(this, this, this.carOnCar, null, this);
         this.scene.physics.add.collider(this, player.bullets, this.onBulletImpact, null, this);
         this.scene.physics.add.overlap(this.bullets, player, this.onPlayerBullet, null, this);
     }
@@ -84,6 +87,11 @@ export default class Enemies extends Phaser.GameObjects.Group
         player.doDamage(10);
     }
 
+    carOnCar ()
+    {
+        this.carHitSound.play();
+    }
+
     onBulletImpact (enemy, bullet)
     {
         this.scene.juice.flash(enemy.car);
@@ -93,6 +101,7 @@ export default class Enemies extends Phaser.GameObjects.Group
 
     onPlayerImpact (player, bullet)
     {
+        this.carHitSound.play();
         //this.scene.juice.flash(player.truckTrailer);   
     }
 
@@ -104,6 +113,8 @@ export default class Enemies extends Phaser.GameObjects.Group
         
         if (bullet) 
         {
+            this.shootSound.play();
+
             this.scene.physics.world.enable(bullet);
             bullet.setActive(true);
             bullet.setVisible(true);

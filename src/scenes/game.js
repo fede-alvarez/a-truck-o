@@ -33,6 +33,14 @@ export default class Game extends Phaser.Scene
             frames: this.anims.generateFrameNumbers('car', { frames: [ 0,1 ] })
         });
 
+        /** Music & Sounds */
+        this.music = this.sound.add('mainMusic', {volume:0.8, loop:true});
+
+        if (this.music.isPlaying)
+            this.music.stop();
+
+        this.music.play();
+
         /** Scale Points */
         let minScalePos = {x: canvasWidth*0.5, y:40};
         let maxScalePos = {x: minScalePos.x, y:canvasHeight-40};

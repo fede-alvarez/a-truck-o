@@ -35,11 +35,19 @@ export default class Menu extends Phaser.Scene
 
         this.gui = new Gui(this, 'menu');
 
+        this.levitationSound = this.sound.add('sfxLevitate', {volume:0.1, loop:true});
+        this.levitationSound.play();
+
+        this.uiClickSound = this.sound.add('sfxUIClick', {volume:0.5});
+        
+
         let self = this;
         this.input.on('pointerdown', function(pointer, localX, localY, event) 
         {
+            self.uiClickSound.play();
+            self.levitationSound.stop();
             //self.scene.start('Game');
-            this.cameras.main.fadeOut(1000, 0, 0, 0);
+            self.cameras.main.fadeOut(1000, 0, 0, 0);
         });
 
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {

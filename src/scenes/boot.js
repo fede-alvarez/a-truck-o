@@ -43,6 +43,14 @@ export default class Boot extends Phaser.Scene
         this.load.image('explosion', this.path + 'particles/explosion.png');
         this.load.spritesheet('car', this.path + 'entities/car_14x13.png', {frameWidth:14, frameHeight:13} );
      
+        /** Music & Sounds */
+        this.load.audio('mainMusic', this.path + 'music/the_drive.mp3');
+
+        this.load.audio('sfxLevitate', this.path + 'sounds/levitation.mp3');
+        this.load.audio('sfxShoot', this.path + 'sounds/shoot.mp3');
+        this.load.audio('sfxCarsHit', this.path + 'sounds/collision.mp3');
+        this.load.audio('sfxUIClick', this.path + 'sounds/click.mp3');
+
         // Displaying Progress
         const progress = this.add.graphics();
 
