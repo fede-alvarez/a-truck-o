@@ -37,8 +37,14 @@ export default class Boot extends Phaser.Scene
         this.load.image('rocks',  this.path + 'entities/rocks.png');
         this.load.image('tree',   this.path + 'entities/tree_01.png');
         this.load.image('tree2',   this.path + 'bg/dead_tree.png');
+
+        this.load.image('dialogContainer', this.path + 'ui/dialog.png');
+        this.load.image('dialogAvatar', this.path + 'ui/avatar_woman.png');
         
         this.load.image('dust', this.path + 'particles/dust.png');
+
+        this.load.image('mouseClick', this.path + 'ui/tuto_mouse_click.png');
+        this.load.image('mouseStill', this.path + 'ui/tuto_mouse_move.png');
 
         this.load.image('explosion', this.path + 'particles/explosion.png');
         this.load.spritesheet('car', this.path + 'entities/car_14x13.png', {frameWidth:14, frameHeight:13} );
@@ -54,6 +60,8 @@ export default class Boot extends Phaser.Scene
         this.load.audio('sfxExplosion', this.path + 'sounds/explosion.mp3');
         this.load.audio('sfxGameOver', this.path + 'sounds/game_over.mp3');
         this.load.audio('sfxObstacle', this.path + 'sounds/obstacle.mp3');
+
+        //this.load.bitmapFont('kenny1bit', this.path + 'font/font_export.png', this.path + 'font/font_export.xml');
 
         // UI
         this.load.audio('sfxUIClick', this.path + 'sounds/click.mp3');

@@ -3,13 +3,23 @@
   <head>
     <meta charset="utf-8">
     <style>
+
       @font-face {
         font-family: 'kenny1bit_3';
         src: url('src/assets/font/kenny1bit_3.ttf');
         font-weight:400;
         font-weight:normal;
       }
-      body { padding:0; margin:0; overflow: hidden; }
+      html, body {
+        image-rendering: optimizeSpeed;              /* Older versions of FF */
+        image-rendering: -moz-crisp-edges;           /* FF 6.0+ */
+        image-rendering: -webkit-optimize-contrast;  /* Webkit (non standard naming) */
+        image-rendering: -o-crisp-edges;             /* OS X & Windows Opera (12.02+) */
+        image-rendering: crisp-edges;                /* Possible future browsers. */
+        -ms-interpolation-mode: nearest-neighbor;    /* IE (non standard naming) */
+        image-rendering: pixelated;                  /* Chrome 41 */
+        padding:0; margin:0; overflow: hidden;
+      }
     </style>
   </head>
   <body>

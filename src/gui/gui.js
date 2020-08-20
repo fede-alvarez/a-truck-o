@@ -48,9 +48,15 @@ export default class Gui extends Phaser.GameObjects.Group
                 yoyo:true
             });
         }else{
-            this.createHPBar();
-            //this.createCooldownBar();
-            this.createProgress();
+            
+
+            if (scene.isIntro) 
+            {
+
+            }else{
+                this.createHPBar();
+                this.createProgress();
+            }
         }
 
         /**
@@ -99,7 +105,7 @@ export default class Gui extends Phaser.GameObjects.Group
     updateProgress ()
     {
         /** Progress Bar */
-        if (!this.progressBarActive || this.scene.isMenu) return;
+        if (!this.progressBarActive || this.scene.isIntro ) return;
 
         //console.log(this.scene.distance);
         let dist = this.scene.distance;

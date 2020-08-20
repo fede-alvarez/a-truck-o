@@ -51,6 +51,7 @@ export default class Player extends Phaser.GameObjects.Container
         this.lives = 5;
         this.fireSpeed = 300;
         this.isDead = false;
+        this.canMove = true;
 
         this.body.setSize(this.body.width, this.body.height*0.3);
         this.body.setOffset(-30,-4);
@@ -123,21 +124,24 @@ export default class Player extends Phaser.GameObjects.Container
     {
         if (this.isDead) return;
 
-        if (this.keyW.isDown)
+        if (this.canMove)
         {
-            this.body.setVelocityY(-this.vel.y);
-        }else if (this.keyS.isDown){
-            this.body.setVelocityY(this.vel.y);
-        }
-
-        if (this.keyA.isDown)
-        {
-            //this.body.setVelocityX(-this.vel.x * 3);
-            this.body.setVelocityX(-this.vel.x);
-            this.engineSound.setVolume(0.3);
-        }else if (this.keyD.isDown){
-            this.body.setVelocityX(this.vel.x);
-            this.engineSound.setVolume(0.6);
+            if (this.keyW.isDown)
+            {
+                this.body.setVelocityY(-this.vel.y);
+            }else if (this.keyS.isDown){
+                this.body.setVelocityY(this.vel.y);
+            }
+    
+            if (this.keyA.isDown)
+            {
+                //this.body.setVelocityX(-this.vel.x * 3);
+                this.body.setVelocityX(-this.vel.x);
+                this.engineSound.setVolume(0.3);
+            }else if (this.keyD.isDown){
+                this.body.setVelocityX(this.vel.x);
+                this.engineSound.setVolume(0.6);
+            }
         }
 
         /** Scaling */
@@ -166,7 +170,7 @@ export default class Player extends Phaser.GameObjects.Container
 
     fireWeapon ( pointer )
     {
-        if (this.isDead) return;
+        if (this.isDead || !this.canMove) return;
         this.shootSound.play();
 
         let targetX = pointer.x, 

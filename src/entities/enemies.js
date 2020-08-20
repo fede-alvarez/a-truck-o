@@ -12,7 +12,7 @@ export default class Enemies extends Phaser.GameObjects.Group
         this.scene = scene;
         this.canvasSize = this.scene.getCanvasSize();
 
-        this.enemiesNumber = 3;
+        this.enemiesNumber = 0;
 
         this.player = this.scene.player;
 

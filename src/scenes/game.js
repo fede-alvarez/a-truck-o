@@ -6,6 +6,7 @@ import Enemies from "../entities/enemies";
 import phaserJuice from "../libs/phaserJuice";
 import Gui from "../gui/gui";
 import Obstacles from "../entities/obstacles";
+import Dialog from "../gui/dialog";
 
 export default class Game extends Phaser.Scene
 {
@@ -52,7 +53,7 @@ export default class Game extends Phaser.Scene
         this.bg = new Background(this);
 
         /** Player */
-        this.player = new Player(this, 50, 60);
+        this.player = new Player(this, 50, 80);
 
         /** Enemies */
         this.enemies = new Enemies(this);
@@ -60,8 +61,6 @@ export default class Game extends Phaser.Scene
         this.physics.add.collider(this.player, this.bg.limitsGroup);
         this.physics.add.collider(this.player, this.bg.playerLimits);
         this.physics.add.collider(this.enemies, this.bg.limitsGroup);
-
-        this.obstacles = new Obstacles(this);
 
         /** Game Progression */
         this.goalDistance = 150;
@@ -71,6 +70,18 @@ export default class Game extends Phaser.Scene
 
         this.winState = false;
 
+        /** Intro */
+        this.isIntro = true;
+
+        if (this.isIntro)
+        {
+            this.player.canMove = false;
+            this.dialog = new Dialog(this, 10, 10);
+            this.dialog.show('found');
+        }else{
+            this.obstacles = new Obstacles(this);
+        }
+        
         this.gui = new Gui(this);
     }
 
@@ -78,7 +89,9 @@ export default class Game extends Phaser.Scene
     {
         this.player.update();
         this.enemies.update();
-        this.obstacles.update();
+        
+        if (!this.isIntro)
+            this.obstacles.update();
 
         if (this.winState) return;
 

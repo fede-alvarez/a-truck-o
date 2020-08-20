@@ -10,7 +10,7 @@ const config = {
   width: 320,
   height: 180,
   zoom: 2,
-  pixelArt: true,
+  render : { pixelArt: true },
   scene: [Boot, Menu, Game],
   physics: {
     default: "arcade",
