@@ -29,7 +29,7 @@ export default class Enemies extends Phaser.GameObjects.Group
     {
         this.scaleWhileActive();
         this.followPlayer();
-        
+
         /** Bullets */
         this.bullets.children.each(function(b) {
             if (b.active) 
@@ -116,6 +116,12 @@ export default class Enemies extends Phaser.GameObjects.Group
                 /** Scaling */
                 let enemyScale = this.calculateScale(enemy.y);
                 enemy.setScale(enemyScale.x, enemyScale.y);
+
+                enemy.hp.x = enemy.x - 16;
+                enemy.hp.y = enemy.y - 18;
+                enemy.hp.setScale(enemyScale.x, enemyScale.y);
+                enemy.hp.draw();
+                //enemy.hp.visible = false;
             }
         }.bind(this));
     }
@@ -129,7 +135,7 @@ export default class Enemies extends Phaser.GameObjects.Group
             if (enemy.active) 
             {
                 let playerDistance = Phaser.Math.Distance.Between(this.player.x, this.player.y, enemy.x, enemy.y);
-                
+
                 if (playerDistance < 70) 
                 {
                     this.scene.physics.moveTo(enemy, this.player.x + 16, this.player.y - 16, 20);

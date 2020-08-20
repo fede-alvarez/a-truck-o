@@ -1,3 +1,5 @@
+import HealthBar from "../helpers/healthbar";
+
 export default class Enemy extends Phaser.GameObjects.Container
 {
     constructor(scene, x, y)
@@ -26,11 +28,17 @@ export default class Enemy extends Phaser.GameObjects.Container
         this.depth = this.y;
         
         this.health = 50;
+
+        this.hp = new HealthBar(scene, this.x, this.y - 16);
+        this.hp.value = this.health;
     }
 
     doDamage ()
     {
         this.health -= 10;
+        this.hp.decrease(10);
+        this.hp.draw();
+
         if (this.health <= 0)
             this.isDead();
     }
@@ -38,6 +46,7 @@ export default class Enemy extends Phaser.GameObjects.Container
     isDead ()
     {
         console.log("You're dead!");
+        this.hp.destroy();
         this.destroy();
     }
 }
