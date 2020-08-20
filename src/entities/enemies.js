@@ -28,6 +28,7 @@ export default class Enemies extends Phaser.GameObjects.Group
     update ()
     {
         this.scaleWhileActive();
+        this.followPlayer();
         
         /** Bullets */
         this.bullets.children.each(function(b) {
@@ -68,13 +69,9 @@ export default class Enemies extends Phaser.GameObjects.Group
 
     onPlayerBullet (player, bullet)
     {
-        //console.log("Bullet collision!");
-        //bullet.setActive(false);
         bullet.destroy();
-        //player.bullets.killAndHide(bullet);
-        //console.log("Damage");
         this.shakeIt();
-        player.doDamage(2);
+        player.doDamage(10);
     }
 
     onBulletImpact (enemy, bullet)
@@ -116,6 +113,21 @@ export default class Enemies extends Phaser.GameObjects.Group
         {
             if (enemy.active) 
             {
+                /** Scaling */
+                let enemyScale = this.calculateScale(enemy.y);
+                enemy.setScale(enemyScale.x, enemyScale.y);
+            }
+        }.bind(this));
+    }
+
+    followPlayer ()
+    {
+        if (this.player.isDead) return;
+
+        this.children.each(function(enemy) 
+        {
+            if (enemy.active) 
+            {
                 let playerDistance = Phaser.Math.Distance.Between(this.player.x, this.player.y, enemy.x, enemy.y);
                 
                 if (playerDistance < 70) 
@@ -133,10 +145,6 @@ export default class Enemies extends Phaser.GameObjects.Group
                 if (enemy.x > this.canvasSize.w + 32) {
                     enemy.x = -32 - Phaser.Math.Between(256, 512);
                 }
-
-                /** Scaling */
-                let enemyScale = this.calculateScale(enemy.y);
-                enemy.setScale(enemyScale.x, enemyScale.y);
             }
         }.bind(this));
     }

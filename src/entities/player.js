@@ -97,6 +97,15 @@ export default class Player extends Phaser.GameObjects.Container
         });
 
         /**  */
+        this.explosionEmitter = scene.add.particles('explosion').createEmitter({
+            x: -1000,
+            y: -1000,
+            scale: { start: 0.5, end: 4 },
+            setVelocityX : 100,
+            setVelocityY : 100,
+            blendMode: 'SCREEN',
+            lifespan: 100,
+        });
         
         scene.input.on('pointermove', this.turretTrack, this);
         scene.input.on('pointerdown', this.fireWeapon, this);
@@ -104,6 +113,8 @@ export default class Player extends Phaser.GameObjects.Container
 
     update ()
     {
+        if (this.isDead) return;
+
         if (this.keyW.isDown)
         {
             this.body.setVelocityY(-this.vel.y);
@@ -147,6 +158,8 @@ export default class Player extends Phaser.GameObjects.Container
 
     fireWeapon ( pointer )
     {
+        if (this.isDead) return;
+
         let targetX = pointer.x, 
             targetY = pointer.y;
 
@@ -193,21 +206,31 @@ export default class Player extends Phaser.GameObjects.Container
         this.health -= amount;
 
         let newLives = Math.ceil(this.health * 5 / this.defaultHealth);
-        if (newLives != this.lives)
-        {
-            this.scene.gui.removeHP();
-            console.log("Remove HP");
-        }
+        this.scene.gui.showHP(newLives);
 
         if (this.health <= 0)
-        {
-            console.log("Player is Dead!");
-            this.isDead = true;
-        }
+            this.hasDied();
+    }
+
+    hasDied ()
+    {
+        console.log("Player is Dead!");
+
+        this.isDead = true;
+        this.visible = false;
+
+        this.dustParticles.active = false;
+        
+        this.explosionEmitter.setPosition(this.x, this.y);
+        this.explosionEmitter.explode();
+
+        this.scene.gui.showGameOver();
     }
 
     turretTrack (pointer)
     {
+        if (this.isDead) return;
+        
         let angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.x+this.scene.cameras.main.scrollX, pointer.y+this.scene.cameras.main.scrollY);
         this.truckCanon.rotation=angle;
     }

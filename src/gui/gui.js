@@ -21,11 +21,33 @@ export default class Gui extends Phaser.GameObjects.Group
         //this.createCooldownBar();
         this.createProgress();
 
-        /*this.scene.add.text(60, 60, 'text', {
-            fontFamily: 'kenny1bit_3',
-            fontSize:8,
-            color:''
-        });*/
+        this.depth = 200;
+
+        /**
+         * Game Over 
+         * Texts
+         */
+        let selfScene = this.scene;
+        this.fontSettings = { fontFamily: 'kenny1bit_3', fontSize:8, color:'#CFC6B8' };
+
+        this.goLabel = this.scene.add.text(this.canvasSize.w * 0.5, this.canvasSize.h * 0.5 - 30, 'game over', this.fontSettings);
+        this.goLabel.setOrigin(.5);
+
+        this.goMessage = this.scene.add.text(this.canvasSize.w * 0.5, this.canvasSize.h * 0.5 - 10, 'the humans are now doomed!', this.fontSettings);
+        this.goMessage.setOrigin(.5);
+        
+        this.confirm = this.scene.add.text(this.goLabel.x - 70, this.goMessage.y + 30, 'try again!', this.fontSettings);
+        this.confirm.setOrigin(.5);
+
+        this.deny = this.scene.add.text(this.goLabel.x + 70, this.goMessage.y + 30, 'go menu', this.fontSettings);
+        this.deny.setOrigin(.5);
+        
+        this.add(this.confirm);
+        this.add(this.deny);
+        this.add(this.goLabel);
+        this.add(this.goMessage);
+
+        this.goLabel.visible = this.goMessage.visible = this.confirm.visible = this.deny.visible = false;
     }
 
     createProgress()
@@ -77,6 +99,19 @@ export default class Gui extends Phaser.GameObjects.Group
         }
     }
 
+    showHP ( amount ) 
+    {
+        for (let i = 0; i < 5; i++)
+        {
+            this.hpBoxes[i].visible = false;
+        }
+
+        for (let j = 0; j < amount; j++)
+        {
+            this.hpBoxes[j].visible = true;
+        }
+    }
+
     removeHP ()
     {
         let hp = this.hpBoxes.pop();
@@ -103,5 +138,23 @@ export default class Gui extends Phaser.GameObjects.Group
         this.cooldownBar.fillStyle(0xFF0000, 1);
         this.cooldownBar.fillRect(2,17,31,8); // 62 Max Size
         this.add(this.cooldownBar);
+    }
+
+    showGameOver ()
+    {
+        let self = this;
+        this.progressBar.visible = false;
+        this.progressIndicator.visible = false;
+        this.hp.visible = false;
+
+        this.goLabel.visible = this.goMessage.visible = this.confirm.visible = this.deny.visible = true;
+
+        this.confirm.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
+            self.scene.scene.restart();
+        });
+
+        this.deny.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
+            console.log("Go Menu");
+        });
     }
 }
