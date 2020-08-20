@@ -1,35 +1,62 @@
 export default class Gui extends Phaser.GameObjects.Group
 {
-    constructor(scene)
+    constructor(scene, comingFrom)
     {
         super(scene);
         scene.add.existing(this);
 
         this.scene = scene;
         this.canvasSize = this.scene.getCanvasSize();
+        
+        this.altFontSettings = { fontFamily: 'kenny1bit_3', fontSize:16, color:'#CFC6B8' };
+        this.fontSettings = { fontFamily: 'kenny1bit_3', fontSize:8, color:'#CFC6B8' };
 
-        this.lives = this.scene.player.lives;
+        if (this.scene.player)
+            this.player = this.scene.player;
+        
+        this.lives = (this.player) ? this.player.lives : 5;
 
         this.distance = this.scene.distance;
         this.progressBarPoints = {
             start : {x:0,y:0},
             end   : {x:0,y:0}
         }
+
         this.progressBarActive = true;
 
-        this.createHPBar();
-        //this.createCooldownBar();
-        this.createProgress();
+        if (comingFrom == 'menu')
+        {
+            this.depth = 200;
 
-        this.depth = 200;
+            this.title = this.scene.add.text(this.canvasSize.w * 0.5, this.canvasSize.h * 0.5 - 30, 'a-truck-o!', this.altFontSettings);
+            this.title.setOrigin(0.5);
+    
+            this.instructions = this.scene.add.text(this.canvasSize.w * 0.5, this.canvasSize.h * 0.5 - 5, 'w a s d - move', this.fontSettings);
+            this.mouseInstructions = this.scene.add.text(this.canvasSize.w * 0.5, this.canvasSize.h * 0.5 + 10, 'mouse - aim-shoot', this.fontSettings);
+            this.playText = this.scene.add.text(this.canvasSize.w * 0.5, this.canvasSize.h * 0.5 + 50, '- click to start -', this.fontSettings);
+    
+            this.instructions.setOrigin(0.5);
+            this.mouseInstructions.setOrigin(0.5);
+            this.playText.setOrigin(0.5);
+    
+            scene.tweens.add({
+                targets: [this.title, this.playText],
+                y:'+= 5',
+                duration:500,
+                ease: 'QuadInOut',
+                repeat: -1,
+                yoyo:true
+            });
+        }else{
+            this.createHPBar();
+            //this.createCooldownBar();
+            this.createProgress();
+        }
 
         /**
          * Game Over 
          * Texts
          */
-        let selfScene = this.scene;
-        this.fontSettings = { fontFamily: 'kenny1bit_3', fontSize:8, color:'#CFC6B8' };
-
         this.goLabel = this.scene.add.text(this.canvasSize.w * 0.5, this.canvasSize.h * 0.5 - 30, 'game over', this.fontSettings);
         this.goLabel.setOrigin(.5);
 
@@ -69,7 +96,7 @@ export default class Gui extends Phaser.GameObjects.Group
     updateProgress ()
     {
         /** Progress Bar */
-        if (!this.progressBarActive) return;
+        if (!this.progressBarActive || this.scene.isMenu) return;
 
         //console.log(this.scene.distance);
         let dist = this.scene.distance;
@@ -149,12 +176,22 @@ export default class Gui extends Phaser.GameObjects.Group
 
         this.goLabel.visible = this.goMessage.visible = this.confirm.visible = this.deny.visible = true;
 
-        this.confirm.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
-            self.scene.scene.restart();
+        this.confirm.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
+            
+            this.scene.cameras.main.fadeOut(1000, 0, 0, 0);
+
+            this.scene.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+                self.scene.scene.restart();
+            })
         });
 
-        this.deny.setInteractive().on('pointerdown', function(pointer, localX, localY, event){
-            console.log("Go Menu");
+        this.deny.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
+            
+            this.scene.cameras.main.fadeOut(1000, 0, 0, 0);
+
+            this.scene.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+                self.scene.scene.start('Menu');
+            })
         });
     }
 }

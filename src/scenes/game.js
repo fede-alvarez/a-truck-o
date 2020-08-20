@@ -19,6 +19,8 @@ export default class Game extends Phaser.Scene
         this.input.mouse.disableContextMenu();
         this.input.setDefaultCursor('url(src/assets/cursor.png), pointer');
 
+        this.cameras.main.fadeIn(1000, 0, 0, 0);
+        
         this.juice = new phaserJuice(this);
 
         let canvasWidth = this.sys.canvas.width,
@@ -54,7 +56,7 @@ export default class Game extends Phaser.Scene
         this.obstacles = new Obstacles(this);
 
         /** Game Progression */
-        this.goalDistance = 300;
+        this.goalDistance = 150;
         this.distance = 0;
         this.distanceTimer = 0;
         this.distanceAddTime = 120;
@@ -69,7 +71,6 @@ export default class Game extends Phaser.Scene
         this.player.update();
         this.enemies.update();
         this.obstacles.update();
-        this.gui.updateProgress();
 
         if (this.winState) return;
 
@@ -86,8 +87,9 @@ export default class Game extends Phaser.Scene
                 this.winState = true;
                 console.log("You Win!");
             }
-                
         }
+        
+        this.gui.updateProgress();
     }
 
     getCanvasSize ()
