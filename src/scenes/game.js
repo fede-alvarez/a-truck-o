@@ -85,6 +85,17 @@ export default class Game extends Phaser.Scene
         this.gui = new Gui(this);
     }
 
+    introFinalized ()
+    {
+        this.player.canMove = true;
+
+        this.enemies.enemiesNumber = 3;
+        this.enemies.createEnemies();
+        
+        this.obstacles = new Obstacles(this);
+        this.gui.startGameUI();
+    }
+
     update ()
     {
         this.player.update();

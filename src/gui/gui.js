@@ -48,12 +48,8 @@ export default class Gui extends Phaser.GameObjects.Group
                 yoyo:true
             });
         }else{
-            
-
-            if (scene.isIntro) 
+            if (!scene.isIntro) 
             {
-
-            }else{
                 this.createHPBar();
                 this.createProgress();
             }
@@ -84,6 +80,14 @@ export default class Gui extends Phaser.GameObjects.Group
 
         /** Music & Sounds */
         this.uiClickSound = scene.sound.add('sfxUIClick', {volume:0.7});
+    }
+
+    startGameUI ()
+    {
+        this.scene.isIntro = false;
+
+        this.createHPBar();
+        this.createProgress();
     }
 
     createProgress()

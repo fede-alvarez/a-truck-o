@@ -54,11 +54,23 @@ export default class Dialog extends Phaser.GameObjects.Container
 
         /** Music & Sounds */
         this.uiClickSound = scene.sound.add('sfxUIClick', {volume:0.7});
+        this.radioSound = scene.sound.add('sfxRadio', {volume:0.4});
+        this.voiceSound = scene.sound.add('sfxVoice', {volume:0.1, delay:2000});
 
         scene.input.on('pointerdown', this.nextDialog, this);
     }
 
     show ( dialogId )
+    {
+        this.radioSound.play();
+        let self = this;
+        this.radioSound.once('complete', function() {
+            self.voiceSound.play();
+            self.showDialogId(dialogId);
+        });
+    }
+
+    showDialogId (dialogId)
     {
         let dialog = this.getDialogById(dialogId);
 
@@ -73,12 +85,14 @@ export default class Dialog extends Phaser.GameObjects.Container
     nextDialog ()
     {
         if (!this.currentDialog) return;
-        
+
         if (!this.currentDialog.oneTime)
         {
             let dialog = this.getDialogByIndex(this.currentDialog.index + 1);
             if (dialog)
             {
+                this.voiceSound.play();
+
                 this.currentDialog = dialog;
                 this.activateAll();
                 this.text.setText(dialog.text);
@@ -86,6 +100,13 @@ export default class Dialog extends Phaser.GameObjects.Container
         }else{
             this.desactivateAll();
             this.currentDialog = null;
+
+            let self = this;
+            this.voiceSound.once('complete', function() {
+                self.radioSound.play();
+
+                self.scene.introFinalized();
+            });
         }
     }
 

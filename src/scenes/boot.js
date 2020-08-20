@@ -61,6 +61,9 @@ export default class Boot extends Phaser.Scene
         this.load.audio('sfxGameOver', this.path + 'sounds/game_over.mp3');
         this.load.audio('sfxObstacle', this.path + 'sounds/obstacle.mp3');
 
+        this.load.audio('sfxRadio', this.path + 'sounds/radio-beep.mp3');
+        this.load.audio('sfxVoice', this.path + 'sounds/voice.mp3');
+
         //this.load.bitmapFont('kenny1bit', this.path + 'font/font_export.png', this.path + 'font/font_export.xml');
 
         // UI
