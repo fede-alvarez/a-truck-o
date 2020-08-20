@@ -44,6 +44,18 @@ export default class Menu extends Phaser.Scene
         let self = this;
         this.input.on('pointerdown', function(pointer, localX, localY, event) 
         {
+            let music = this.scene.music;
+            
+            self.tweens.add({ 
+                targets: music, 
+                volume: 0, 
+                duration: 700,
+                onComplete : function() {
+                    if (self.music.isPlaying)
+                        self.music.stop();
+                } 
+            }); 
+
             self.uiClickSound.play();
             self.levitationSound.stop();
             //self.scene.start('Game');
@@ -53,6 +65,14 @@ export default class Menu extends Phaser.Scene
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
             this.scene.start('Game');
         })
+
+        /** Music & Sounds */
+        this.music = this.sound.add('mainMusic', {volume:0.1, loop:true});
+
+        if (this.music.isPlaying)
+            this.music.stop();
+
+        this.music.play();
     }
 
     getCanvasSize ()

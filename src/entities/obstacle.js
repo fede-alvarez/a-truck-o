@@ -25,16 +25,4 @@ export default class Obstacle extends Phaser.GameObjects.Container
 
         this.health = 1;
     }
-
-    doDamage ( amount )
-    {
-        this.health -= amount;
-        if (this.health <= 0)
-            this.isDead();
-    }
-
-    isDead ()
-    {
-        console.log("Obstacle dead!");
-    }
 }

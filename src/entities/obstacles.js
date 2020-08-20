@@ -19,6 +19,8 @@ export default class Obstacles extends Phaser.GameObjects.Group
         this.obstaclesList = ['barrer', 'tires'];
 
         this.createObstacles();
+
+        this.obstacleSound = scene.sound.add('sfxObstacle', {volume:0.4});
     }
 
     createObstacles ()
@@ -43,6 +45,8 @@ export default class Obstacles extends Phaser.GameObjects.Group
     {
         let self = this;
         
+        this.obstacleSound.play();
+
         this.scene.juice.flash(player.truckTrailer);
         player.body.setVelocityX(-200);
         

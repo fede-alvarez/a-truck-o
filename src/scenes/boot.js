@@ -49,9 +49,16 @@ export default class Boot extends Phaser.Scene
         this.load.audio('sfxLevitate', this.path + 'sounds/levitation.mp3');
         this.load.audio('sfxShoot', this.path + 'sounds/shoot.mp3');
         this.load.audio('sfxCarsHit', this.path + 'sounds/collision.mp3');
-        this.load.audio('sfxUIClick', this.path + 'sounds/click.mp3');
+        this.load.audio('sfxEngine', this.path + 'sounds/engine.wav');
+        this.load.audio('sfxEnemyEngine', this.path + 'sounds/enemy_engine.wav');
+        this.load.audio('sfxExplosion', this.path + 'sounds/explosion.mp3');
+        this.load.audio('sfxGameOver', this.path + 'sounds/game_over.mp3');
+        this.load.audio('sfxObstacle', this.path + 'sounds/obstacle.mp3');
 
-        // Displaying Progress
+        // UI
+        this.load.audio('sfxUIClick', this.path + 'sounds/click.mp3');
+        
+        /** Displaying Progress */
         const progress = this.add.graphics();
 
         this.load.on('progress', (value) => {

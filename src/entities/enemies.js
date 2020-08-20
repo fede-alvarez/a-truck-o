@@ -33,7 +33,8 @@ export default class Enemies extends Phaser.GameObjects.Group
         });
 
         this.shootSound = scene.sound.add('sfxShoot', {volume:0.15});
-        this.carHitSound = scene.sound.add('sfxCarsHit', {volume:0.5});
+        this.playerHitSound = scene.sound.add('sfxCarsHit', {volume:0.4});
+        this.carHitSound = scene.sound.add('sfxCarsHit', {volume:0.2});
         
         this.createEnemies();
     }
@@ -53,6 +54,17 @@ export default class Enemies extends Phaser.GameObjects.Group
                 let isBetweenBonds = Phaser.Geom.Rectangle.Overlaps(this.scene.physics.world.bounds, b.getBounds());
                 if (!isBetweenBonds)
                     b.setActive(false);
+            }
+        }.bind(this));
+    }
+
+    stopEngines ()
+    {
+        this.children.each(function(enemy) 
+        {
+            if (enemy.active) 
+            {
+                enemy.engineSound.stop();
             }
         }.bind(this));
     }
@@ -85,6 +97,7 @@ export default class Enemies extends Phaser.GameObjects.Group
         bullet.destroy();
         this.shakeIt();
         player.doDamage(10);
+        this.playerHitSound.play();
     }
 
     carOnCar ()
@@ -97,6 +110,7 @@ export default class Enemies extends Phaser.GameObjects.Group
         this.scene.juice.flash(enemy.car);
         bullet.destroy();
         enemy.doDamage();
+        this.carHitSound.play();
     }
 
     onPlayerImpact (player, bullet)

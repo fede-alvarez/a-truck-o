@@ -77,7 +77,7 @@ export default class Gui extends Phaser.GameObjects.Group
         this.goLabel.visible = this.goMessage.visible = this.confirm.visible = this.deny.visible = false;
 
         /** Music & Sounds */
-        this.uiClickSound = scene.sound.add('sfxUIClick', {volume:0.5});
+        this.uiClickSound = scene.sound.add('sfxUIClick', {volume:0.7});
     }
 
     createProgress()
@@ -179,22 +179,24 @@ export default class Gui extends Phaser.GameObjects.Group
 
         this.goLabel.visible = this.goMessage.visible = this.confirm.visible = this.deny.visible = true;
 
-        this.confirm.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
-            self.uiClickSound.play();
+        this.confirm.setInteractive().on('pointerdown', function(pointer) {
+            this.scene.enemies.stopEngines();
+            this.uiClickSound.play();
             this.scene.cameras.main.fadeOut(1000, 0, 0, 0);
 
             this.scene.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-                self.scene.scene.restart();
+                this.scene.scene.restart();
             })
-        });
+        }, this);
 
-        this.deny.setInteractive().on('pointerdown', function(pointer, localX, localY, event) {
-            self.uiClickSound.play();
+        this.deny.setInteractive().on('pointerdown', function(pointer) {
+            this.scene.enemies.stopEngines();
+            this.uiClickSound.play();
             this.scene.cameras.main.fadeOut(1000, 0, 0, 0);
 
             this.scene.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
-                self.scene.scene.start('Menu');
+                this.scene.scene.start('Menu');
             })
-        });
+        }, this);
     }
 }

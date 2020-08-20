@@ -112,7 +112,11 @@ export default class Player extends Phaser.GameObjects.Container
 
         this.shootSound = scene.sound.add('sfxShoot', {volume:0.5});
         this.uiClickSound = scene.sound.add('sfxUIClick', {volume:0.5});
+        this.explosionSound = scene.sound.add('sfxExplosion', {volume:0.8});
+        this.gameOverSound = scene.sound.add('sfxGameOver', {delay:300});
 
+        this.engineSound = scene.sound.add('sfxEngine', {volume:0.4, loop:true});
+        this.engineSound.play();
     }
 
     update ()
@@ -130,11 +134,11 @@ export default class Player extends Phaser.GameObjects.Container
         {
             //this.body.setVelocityX(-this.vel.x * 3);
             this.body.setVelocityX(-this.vel.x);
+            this.engineSound.setVolume(0.3);
         }else if (this.keyD.isDown){
             this.body.setVelocityX(this.vel.x);
+            this.engineSound.setVolume(0.6);
         }
-
-        //this.body.setVelocityX(this.vel.x);
 
         /** Scaling */
         let scaleMod = this.calculateScale(this.y);
@@ -220,6 +224,9 @@ export default class Player extends Phaser.GameObjects.Container
     hasDied ()
     {
         console.log("Player is Dead!");
+        this.engineSound.stop();
+        this.explosionSound.play();
+        this.gameOverSound.play();
 
         this.isDead = true;
         this.visible = false;

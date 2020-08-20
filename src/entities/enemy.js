@@ -31,6 +31,10 @@ export default class Enemy extends Phaser.GameObjects.Container
 
         this.hp = new HealthBar(scene, this.x, this.y - 16);
         this.hp.value = this.health;
+
+        this.explosionSound = scene.sound.add('sfxExplosion', {volume:0.9});
+        this.engineSound = scene.sound.add('sfxEnemyEngine', {volume:0.1, loop:true});
+        this.engineSound.play();
     }
 
     doDamage ()
@@ -46,6 +50,8 @@ export default class Enemy extends Phaser.GameObjects.Container
     isDead ()
     {
         console.log("You're dead!");
+        this.explosionSound.play();
+
         let explosion = this.scene.enemies.explosion;
         explosion.setPosition(this.x, this.y);
         explosion.explode();
