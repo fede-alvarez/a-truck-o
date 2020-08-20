@@ -46,6 +46,10 @@ export default class Enemy extends Phaser.GameObjects.Container
     isDead ()
     {
         console.log("You're dead!");
+        let explosion = this.scene.enemies.explosion;
+        explosion.setPosition(this.x, this.y);
+        explosion.explode();
+
         this.hp.destroy();
         this.destroy();
     }

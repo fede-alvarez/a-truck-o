@@ -22,6 +22,16 @@ export default class Enemies extends Phaser.GameObjects.Group
         this.fireRate = 50;
         this.canFire = true;
 
+        this.explosion = scene.add.particles('explosion').createEmitter({
+            x: -1000,
+            y: -1000,
+            scale: { start: 0.5, end: 4 },
+            setVelocityX : 100,
+            setVelocityY : 100,
+            blendMode: 'SCREEN',
+            lifespan: 100,
+        });
+
         this.createEnemies();
     }
 
