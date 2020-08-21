@@ -22,6 +22,8 @@ export default class Game extends Phaser.Scene
         this.input.setDefaultCursor('url(src/assets/cursor.png), pointer');
 
         this.cameras.main.fadeIn(1000, 0, 0, 0);
+
+        this.canvasSize = this.getCanvasSize();
         
         this.juice = new phaserJuice(this);
 
@@ -84,6 +86,23 @@ export default class Game extends Phaser.Scene
         }
         
         this.gui = new Gui(this);
+
+        this.addRain();
+    }
+
+    addRain()
+    {
+        var particles = this.add.particles('drop');
+
+        particles.createEmitter({
+            x: { min: 0, max: this.canvasSize.w },
+            y: 0,
+            lifespan: 1000,
+            speedY: { min: 200, max: 400 },
+            scale: { start: 0.2, end: 0 },
+            quantity: 3,
+            blendMode: 'ADD'
+        });
     }
 
     introFinalized ()

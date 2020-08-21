@@ -18,6 +18,16 @@ export default class Obstacles extends Phaser.GameObjects.Group
         this.obstaclesNumber = 3;
         this.obstaclesList = ['barrer', 'tires'];
 
+        this.explosion = scene.add.particles('obstacle_explosion').createEmitter({
+            x: -1000,
+            y: -1000,
+            scale: { start: 0.3, end: 1.5 },
+            setVelocityX : 200,
+            setVelocityY : 300,
+            blendMode: 'SCREEN',
+            lifespan: 100,
+        });
+
         this.createObstacles();
 
         this.obstacleSound = scene.sound.add('sfxObstacle', {volume:0.4});
@@ -43,6 +53,8 @@ export default class Obstacles extends Phaser.GameObjects.Group
 
     onPlayerImpact (obstacle, player)
     {
+        if (this.player.isJumping) return;
+        
         let self = this;
         
         this.obstacleSound.play();
@@ -59,7 +71,8 @@ export default class Obstacles extends Phaser.GameObjects.Group
         });
 
         player.doDamage(5);
-        obstacle.destroy();
+        //obstacle.destroy();
+        obstacle.kill();
     }
 
     onBulletImpact (obstacle, bullet)

@@ -27,11 +27,13 @@ export default class Boot extends Phaser.Scene
         this.load.image('tires', this.path + 'obstacles/tires.png');
 
         this.load.image('ramp', this.path + 'entities/ramp.png');
+        this.load.image('drop', this.path + 'entities/drop.png');
 
         /** GUI */
         this.load.image('truck_hp', this.path + 'ui/hp_bar.png');
         this.load.image('progress_bar', this.path + 'ui/progress_bar.png');
         this.load.image('progress_indicator', this.path + 'ui/progress_indicator.png');
+        this.load.image('warningSign', this.path + 'ui/warn_sign.png');
 
         this.load.image('bullet', this.path + 'entities/bullet_72.png');
 
@@ -49,6 +51,8 @@ export default class Boot extends Phaser.Scene
         this.load.image('mouseStill', this.path + 'ui/tuto_mouse_move.png');
 
         this.load.image('explosion', this.path + 'particles/explosion.png');
+        this.load.image('obstacle_explosion', this.path + 'particles/obstacle_explosion.png');
+        
         this.load.spritesheet('car', this.path + 'entities/car_14x13.png', {frameWidth:14, frameHeight:13} );
      
         /** Music & Sounds */
