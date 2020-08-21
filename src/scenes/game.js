@@ -105,7 +105,7 @@ export default class Game extends Phaser.Scene
         
         if (!this.isIntro)
         {
-            //this.obstacles.update();
+            this.obstacles.update();
             this.ramps.update();
         }
 

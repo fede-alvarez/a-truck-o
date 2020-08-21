@@ -29,10 +29,12 @@ export default class Enemy extends Phaser.GameObjects.Container
         
         this.health = 50;
         this.canMove = true;
+        this.isJumping = false;
 
         this.hp = new HealthBar(scene, this.x, this.y - 16);
         this.hp.value = this.health;
 
+        this.jumpSound = scene.sound.add('sfxCarsHit', {volume:0.2});
         this.explosionSound = scene.sound.add('sfxExplosion', {volume:0.9});
         this.engineSound = scene.sound.add('sfxEnemyEngine', {volume:0.1, loop:true});
         this.engineSound.play();
@@ -46,33 +48,23 @@ export default class Enemy extends Phaser.GameObjects.Container
         this.body.setVelocityY(0);
         this.setActive(false);
 
+        this.isJumping = true;
+
         this.scene.tweens.add({
             targets: this.car,
             y:-40,
             duration:500,
             ease: 'Quad',
             repeat: 0,
-            yoyo:true
-        });
-
-        /*
-        this.scene.tweens.add({
-            targets: [this.base, this.truckTrailer, this.truckWheels],
-            y:-30,
-            duration:500,
-            ease: 'Quad',
-            repeat: 0,
             yoyo:true,
-            onComplete : function()
-            {
-                self.canMove = true;
+            onComplete: function() {
+                self.jumpSound.play();
+                self.car.y = 0;
+                self.canMove = false;
                 self.setActive(true);
-
-                self.base.y = self.truckTrailer.y = self.truckWheels.y = 0;
-                self.baseTurret.y = -12;
-                self.truckCanon.y = -16;
+                self.isJumping = false;
             }
-        });*/
+        });
     }
 
     doDamage ()
@@ -87,7 +79,7 @@ export default class Enemy extends Phaser.GameObjects.Container
 
     isDead ()
     {
-        console.log("You're dead!");
+        //console.log("You're dead!");
         this.explosionSound.play();
 
         let explosion = this.scene.enemies.explosion;

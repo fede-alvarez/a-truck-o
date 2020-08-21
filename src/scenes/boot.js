@@ -10,7 +10,7 @@ export default class Boot extends Phaser.Scene
     preload()
     {
         /** Truck */
-        this.load.image('player', this.path + 'entities/truck_01.png');
+        //this.load.image('player', this.path + 'entities/truck_01.png');
         this.load.image('truck_base', this.path + 'entities/truck_base.png');
         this.load.image('truck_trailer', this.path + 'entities/truck_trailer.png');
         this.load.image('truck_wheels', this.path + 'entities/truck_wheels.png');
@@ -66,7 +66,7 @@ export default class Boot extends Phaser.Scene
         this.load.audio('sfxRadio', this.path + 'sounds/radio-beep.mp3');
         this.load.audio('sfxVoice', this.path + 'sounds/voice.mp3');
 
-        //this.load.bitmapFont('kenny1bit', this.path + 'font/font_export.png', this.path + 'font/font_export.xml');
+        //this.load.bitmapFont('kenny1bit', this.path + 'font/kenney.png', this.path + 'font/kenney.xml');
 
         // UI
         this.load.audio('sfxUIClick', this.path + 'sounds/click.mp3');

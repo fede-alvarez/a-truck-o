@@ -52,6 +52,7 @@ export default class Player extends Phaser.GameObjects.Container
         this.fireSpeed = 300;
         this.isDead = false;
         this.canMove = true;
+        this.isJumping = false;
 
         this.body.setSize(this.body.width, this.body.height*0.3);
         this.body.setOffset(-30,-4);
@@ -115,6 +116,7 @@ export default class Player extends Phaser.GameObjects.Container
         this.uiClickSound = scene.sound.add('sfxUIClick', {volume:0.5});
         this.explosionSound = scene.sound.add('sfxExplosion', {volume:0.8});
         this.gameOverSound = scene.sound.add('sfxGameOver', {delay:300});
+        this.playerHitSound = scene.sound.add('sfxCarsHit', {volume:0.4});
 
         this.engineSound = scene.sound.add('sfxEngine', {volume:0.4, loop:true});
         this.engineSound.play();
@@ -126,6 +128,8 @@ export default class Player extends Phaser.GameObjects.Container
         this.canMove = false;
         this.body.setVelocityY(0);
         this.setActive(false);
+
+        this.isJumping = true;
 
         this.scene.tweens.add({
             targets: [this.baseTurret, this.truckCanon],
@@ -145,12 +149,16 @@ export default class Player extends Phaser.GameObjects.Container
             yoyo:true,
             onComplete : function()
             {
+                self.playerHitSound.play();
+
                 self.canMove = true;
                 self.setActive(true);
 
                 self.base.y = self.truckTrailer.y = self.truckWheels.y = 0;
                 self.baseTurret.y = -12;
                 self.truckCanon.y = -16;
+
+                this.isJumping = false;
             }
         });
     }

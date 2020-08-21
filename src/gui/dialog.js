@@ -25,6 +25,7 @@ export default class Dialog extends Phaser.GameObjects.Container
         this.base.x = (this.canvasSize.w) - this.canvasSize.w * 0.5;
         this.base.y = (this.canvasSize.h - 4) - this.base.height * 0.5;
         this.base.setOrigin(.5);
+        this.base.setScale(1,0);
 
         this.avatar = this.scene.add.image(0,0, 'dialogAvatar');
         this.avatar.x = (this.base.x - this.base.width * 0.5) + 16;
@@ -32,12 +33,12 @@ export default class Dialog extends Phaser.GameObjects.Container
         this.avatar.setOrigin(.5);
 
         this.text = this.scene.add.text(0,0, '', this.smallFont);
-        //this.text = this.scene.add.bitmapText(0, 0, 'kenny1bit', 'hola...probando...1 2 3');
+        //this.text = this.scene.add.bitmapText(0, 0, '');
         this.text.x = (this.base.x - this.base.width * 0.5) + 32;
         this.text.y = (this.base.y - this.base.height * 0.5) + 8;
         this.text.setScale(0.5);
 
-        this.mouse = this.scene.add.image(0,0, 'mouseStill');
+        this.mouse = this.scene.add.image(0,0, 'mouseClick');
         this.mouse.x = this.base.x + this.base.width * 0.5 - 2;
         this.mouse.y = this.base.y;
         
@@ -64,7 +65,8 @@ export default class Dialog extends Phaser.GameObjects.Container
     {
         this.radioSound.play();
         let self = this;
-        this.radioSound.once('complete', function() {
+        this.radioSound.once('complete', function() 
+        {
             self.voiceSound.play();
             self.showDialogId(dialogId);
         });
@@ -76,6 +78,12 @@ export default class Dialog extends Phaser.GameObjects.Container
 
         if (dialog)
         {
+            this.scene.tweens.add({
+                targets: this.base,
+                scaleY:1,
+                duration:1000,
+                ease: 'Bounce'
+            });
             this.currentDialog = dialog;
             this.activateAll();
             this.text.setText(dialog.text);
@@ -98,10 +106,21 @@ export default class Dialog extends Phaser.GameObjects.Container
                 this.text.setText(dialog.text);
             }
         }else{
-            this.desactivateAll();
+            let self = this;
+
             this.currentDialog = null;
 
-            let self = this;
+            this.scene.tweens.add({
+                targets: this.base,
+                scaleY:0,
+                duration:1000,
+                ease: 'Bounce',
+                onComplete : function()
+                {
+                    self.desactivateAll();
+                }
+            });
+            
             this.voiceSound.once('complete', function() {
                 self.radioSound.play();
 

@@ -94,9 +94,11 @@ export default class Enemies extends Phaser.GameObjects.Group
 
     onPlayerBullet (player, bullet)
     {
+        if (player.isJumping) return;
+        
         bullet.destroy();
         this.shakeIt();
-        player.doDamage(10);
+        player.doDamage(1);
         this.playerHitSound.play();
     }
 
