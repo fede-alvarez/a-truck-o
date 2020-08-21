@@ -120,6 +120,41 @@ export default class Player extends Phaser.GameObjects.Container
         this.engineSound.play();
     }
 
+    doJumpAnimation ()
+    {
+        let self = this;
+        this.canMove = false;
+        this.body.setVelocityY(0);
+        this.setActive(false);
+
+        this.scene.tweens.add({
+            targets: [this.baseTurret, this.truckCanon],
+            y:-40,
+            duration:500,
+            ease: 'Quad',
+            repeat: 0,
+            yoyo:true
+        });
+
+        this.scene.tweens.add({
+            targets: [this.base, this.truckTrailer, this.truckWheels],
+            y:-30,
+            duration:500,
+            ease: 'Quad',
+            repeat: 0,
+            yoyo:true,
+            onComplete : function()
+            {
+                self.canMove = true;
+                self.setActive(true);
+
+                self.base.y = self.truckTrailer.y = self.truckWheels.y = 0;
+                self.baseTurret.y = -12;
+                self.truckCanon.y = -16;
+            }
+        });
+    }
+
     update ()
     {
         if (this.isDead) return;
