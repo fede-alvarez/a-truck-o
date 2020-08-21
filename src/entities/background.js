@@ -16,7 +16,7 @@ export default class Background extends Phaser.GameObjects.Group
         bgSky.setOrigin(0);
         this.add(bgSky);
 
-        let bgClouds = this.scene.add.image(this.canvasSize.w + 20,0,'clouds');
+        let bgClouds = this.scene.add.image(this.canvasSize.w + 20,-10,'clouds');
         bgClouds.setOrigin(0);
         this.add(bgClouds);
         
@@ -24,7 +24,7 @@ export default class Background extends Phaser.GameObjects.Group
         bgMountain.setOrigin(0);
         this.add(bgMountain);
 
-        this.scene.tweens.add({
+        this.cloudsTween = this.scene.tweens.add({
             targets: bgClouds,
             x: bgSky.x - 640,
             duration:10000,
@@ -32,7 +32,7 @@ export default class Background extends Phaser.GameObjects.Group
             repeat: -1,
         });
 
-        this.scene.tweens.add({
+        this.mountainsTween = this.scene.tweens.add({
             targets: bgMountain,
             x: -320,
             duration:20000,
@@ -46,42 +46,6 @@ export default class Background extends Phaser.GameObjects.Group
         this.createRocks();
 
         this.createLevelLimits();
-    }
-
-    createLevelLimits ()
-    {
-        this.limitsGroup = this.scene.add.group();
-        this.playerLimits = this.scene.add.group();
-
-        let topLimit = new Phaser.GameObjects.Sprite(this.scene,0,30,'');
-        let bottomLimit = new Phaser.GameObjects.Sprite(this.scene,0,this.canvasSize.h - 5,'');
-        let leftLimit = new Phaser.GameObjects.Sprite(this.scene, -50,0, '');
-        let rightLimit = new Phaser.GameObjects.Sprite(this.scene, this.canvasSize.w - 5,0, '');
-
-        topLimit.visible = bottomLimit.visible = leftLimit.visible = rightLimit.visible = false;
-
-        this.scene.physics.world.enable(topLimit);
-        this.scene.physics.world.enable(bottomLimit);
-        this.scene.physics.world.enable(leftLimit);
-        this.scene.physics.world.enable(rightLimit);
-
-        leftLimit.body.setSize(20,360);
-        rightLimit.body.setSize(20,360);
-        topLimit.body.setSize(640,30);
-        bottomLimit.body.setSize(640,30);
-        topLimit.body.setImmovable();
-        bottomLimit.body.setImmovable();
-        leftLimit.body.setImmovable();
-        rightLimit.body.setImmovable();
-
-        this.limitsGroup.add(topLimit);
-        this.limitsGroup.add(bottomLimit);
-
-        this.playerLimits.add(leftLimit);
-        this.playerLimits.add(rightLimit);
-
-        this.scene.add.existing(this.limitsGroup);
-        this.scene.add.existing(this.playerLimits);
     }
 
     createTrees ()
@@ -180,29 +144,40 @@ export default class Background extends Phaser.GameObjects.Group
         }
     }
 
-    createRoadLines ()
+    createLevelLimits ()
     {
-        /** Road Lines */
-        for (let i = 0; i < 10; i++)
-        {
-            let lineGraph = this.scene.add.graphics();
-            lineGraph.fillStyle(0xFFFFFF, 0.5);
-            lineGraph.fillRect(0, 0, 60, 5);
-            lineGraph.x = i*80;
-            lineGraph.y = 85;
-            
-            let scalePos = this.calculateScale(lineGraph.y);
-            lineGraph.setScale(scalePos.x,scalePos.y);
-            this.add(lineGraph);
+        this.limitsGroup = this.scene.add.group();
+        this.playerLimits = this.scene.add.group();
 
-            this.scene.tweens.add({
-                targets: lineGraph,
-                x: lineGraph.x - 80,
-                duration:1000,
-                ease: 'Linear',
-                repeat: -1,
-            });
-        }
+        let topLimit = new Phaser.GameObjects.Sprite(this.scene,0,30,'');
+        let bottomLimit = new Phaser.GameObjects.Sprite(this.scene,0,this.canvasSize.h - 5,'');
+        let leftLimit = new Phaser.GameObjects.Sprite(this.scene, -50,0, '');
+        let rightLimit = new Phaser.GameObjects.Sprite(this.scene, this.canvasSize.w - 5,0, '');
+
+        topLimit.visible = bottomLimit.visible = leftLimit.visible = rightLimit.visible = false;
+
+        this.scene.physics.world.enable(topLimit);
+        this.scene.physics.world.enable(bottomLimit);
+        this.scene.physics.world.enable(leftLimit);
+        this.scene.physics.world.enable(rightLimit);
+
+        leftLimit.body.setSize(20,360);
+        rightLimit.body.setSize(20,360);
+        topLimit.body.setSize(640,30);
+        bottomLimit.body.setSize(640,30);
+        topLimit.body.setImmovable();
+        bottomLimit.body.setImmovable();
+        leftLimit.body.setImmovable();
+        rightLimit.body.setImmovable();
+
+        this.limitsGroup.add(topLimit);
+        this.limitsGroup.add(bottomLimit);
+
+        this.playerLimits.add(leftLimit);
+        this.playerLimits.add(rightLimit);
+
+        this.scene.add.existing(this.limitsGroup);
+        this.scene.add.existing(this.playerLimits);
     }
 
     calculateScale ( positionY )

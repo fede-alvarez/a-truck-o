@@ -122,6 +122,18 @@ export default class Player extends Phaser.GameObjects.Container
         this.engineSound.play();
     }
 
+    onEndGame ()
+    {
+        this.canMove = false;
+        this.body.setVelocityY(0);
+        this.setActive(false);
+        this.isJumping = false;
+        this.isDead = true;
+        this.visible = false;
+
+        this.engineSound.stop();
+    }
+
     doJumpAnimation ()
     {
         let self = this;

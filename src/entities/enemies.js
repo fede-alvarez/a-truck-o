@@ -21,6 +21,7 @@ export default class Enemies extends Phaser.GameObjects.Group
         this.fireTime = 0;
         this.fireRate = 50;
         this.canFire = true;
+        this.followRange = 80;
 
         this.explosion = scene.add.particles('explosion').createEmitter({
             x: -1000,
@@ -158,6 +159,7 @@ export default class Enemies extends Phaser.GameObjects.Group
                 enemy.hp.y = enemy.y - 18;
                 enemy.hp.setScale(enemyScale.x, enemyScale.y);
                 enemy.hp.draw();
+                //enemy.update();
                 //enemy.hp.visible = false;
             }
         }.bind(this));
@@ -173,7 +175,7 @@ export default class Enemies extends Phaser.GameObjects.Group
             {
                 let playerDistance = Phaser.Math.Distance.Between(this.player.x, this.player.y, enemy.x, enemy.y);
 
-                if (playerDistance < 70) 
+                if (playerDistance < this.followRange)
                 {
                     this.scene.physics.moveTo(enemy, this.player.x + 16, this.player.y - 16, 20);
                     this.fireTime++;
@@ -188,6 +190,8 @@ export default class Enemies extends Phaser.GameObjects.Group
                 if (enemy.x > this.canvasSize.w + 32) {
                     enemy.x = -32 - Phaser.Math.Between(256, 512);
                 }
+
+                
             }
         }.bind(this));
     }

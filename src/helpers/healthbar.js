@@ -46,11 +46,11 @@ export default class HealthBar extends Phaser.GameObjects.Container
 
         if (this.value < 30)
         {
-            this.bar.fillStyle(0xff0000);
+            this.bar.fillStyle(0xE6482E);
         }
         else
         {
-            this.bar.fillStyle(0x00ff00);
+            this.bar.fillStyle(0x3BD973);
         }
 
         var d = Math.floor(this.p * this.value);

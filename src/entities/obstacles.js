@@ -53,8 +53,7 @@ export default class Obstacles extends Phaser.GameObjects.Group
 
     onPlayerImpact (obstacle, player)
     {
-        if (this.player.isJumping) return;
-        
+        //if (this.player.isJumping) return;
         let self = this;
         
         this.obstacleSound.play();

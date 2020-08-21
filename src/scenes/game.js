@@ -66,7 +66,7 @@ export default class Game extends Phaser.Scene
         this.physics.add.collider(this.enemies, this.bg.limitsGroup);
 
         /** Game Progression */
-        this.goalDistance = 90;
+        this.goalDistance = 5; //20
         this.distance = 0;
         this.distanceTimer = 0;
         this.distanceAddTime = 120;
@@ -95,10 +95,11 @@ export default class Game extends Phaser.Scene
         var particles = this.add.particles('drop');
 
         particles.createEmitter({
-            x: { min: 0, max: this.canvasSize.w },
+            x: { min: 0, max: this.canvasSize.w + 100 },
             y: 0,
             lifespan: 1000,
             speedY: { min: 200, max: 400 },
+            speedX: {min:-50, max:-100},
             scale: { start: 0.2, end: 0 },
             quantity: 3,
             blendMode: 'ADD'
@@ -130,22 +131,26 @@ export default class Game extends Phaser.Scene
 
         if (this.winState) return;
 
-        this.distanceTimer++;
-
-        if (this.distanceTimer != 0 && this.distanceTimer % this.distanceAddTime == 0)
+        if (!this.isIntro)
         {
-            this.distanceTimer = 0;
-            this.distance += 1;
+            this.distanceTimer++;
 
-            if (this.distance >= this.goalDistance)
+            if (this.distanceTimer != 0 && this.distanceTimer % this.distanceAddTime == 0)
             {
-                this.distance = 0;
-                this.winState = true;
-                console.log("You Win!");
+                this.distanceTimer = 0;
+                this.distance += 1;
+
+                if (this.distance >= this.goalDistance)
+                {
+                    this.distance = this.goalDistance;
+                    this.winState = true;
+                    this.player.onEndGame();
+                    this.gui.showWinState();
+                }
             }
+            
+            this.gui.updateProgress();
         }
-        
-        this.gui.updateProgress();
     }
 
     getCanvasSize ()

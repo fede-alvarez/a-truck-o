@@ -33,7 +33,11 @@ export default class Enemy extends Phaser.GameObjects.Container
 
         this.hp = new HealthBar(scene, this.x, this.y - 16);
         this.hp.value = this.health;
+        this.hp.visible = false;
 
+        this.showHPCounter = 0;
+        this.showHPTime = 100;
+        
         this.jumpSound = scene.sound.add('sfxCarsHit', {volume:0.2});
         this.explosionSound = scene.sound.add('sfxExplosion', {volume:0.9});
         this.engineSound = scene.sound.add('sfxEnemyEngine', {volume:0.1, loop:true});
@@ -67,11 +71,25 @@ export default class Enemy extends Phaser.GameObjects.Container
         });
     }
 
+    update ()
+    {
+        if (!this.hp.visible) return;
+
+        this.showHPCounter++;
+
+        if (this.showHPCounter != 0 && this.showHPCounter % this.showHPTime == 0)
+        {
+            this.showHPCounter = 0;
+            this.hp.visible = false;
+        }
+    }
+
     doDamage ()
     {
         this.health -= 10;
         this.hp.decrease(10);
         this.hp.draw();
+        this.hp.visible = true;
 
         if (this.health <= 0)
             this.isDead();
@@ -81,6 +99,7 @@ export default class Enemy extends Phaser.GameObjects.Container
     {
         //console.log("You're dead!");
         this.explosionSound.play();
+        this.engineSound.stop();
 
         let explosion = this.scene.enemies.explosion;
         explosion.setPosition(this.x, this.y);

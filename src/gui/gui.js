@@ -78,8 +78,44 @@ export default class Gui extends Phaser.GameObjects.Group
 
         this.goLabel.visible = this.goMessage.visible = this.confirm.visible = this.deny.visible = false;
 
+        /**
+         * WIN
+         */
+        this.winLabel = this.scene.add.text(this.canvasSize.w * 0.5, this.canvasSize.h * 0.5 - 30, 'you did it!', this.altFontSettings);
+        this.winLabel.setOrigin(.5);
+
+        this.winMessage = this.scene.add.text(this.canvasSize.w * 0.5, this.canvasSize.h * 0.5, 'the human received the resources.', this.fontSettings);
+        this.winMessage.setOrigin(.5);
+        this.winMessage2 = this.scene.add.text(this.canvasSize.w * 0.5, this.canvasSize.h * 0.5 + 15, 'humanity will live another day!', this.fontSettings);
+        this.winMessage2.setOrigin(.5);
+
+        this.winGoMenu = this.scene.add.text(this.canvasSize.w * 0.5, this.canvasSize.h * 0.5 + 40, 'go menu!', this.fontSettings);
+        this.winGoMenu.setOrigin(.5);
+
+        this.add(this.winMessage2);
+        this.add(this.winMessage);
+        this.add(this.winLabel);
+        this.add(this.winGoMenu);
+
+        this.winLabel.visible = this.winMessage.visible = this.winMessage2.visible = this.winGoMenu.visible = false;
+
         /** Music & Sounds */
         this.uiClickSound = scene.sound.add('sfxUIClick', {volume:0.7});
+    }
+
+    showWinState ()
+    {
+        this.winLabel.visible = this.winMessage.visible = this.winMessage2.visible = this.winGoMenu.visible = true;
+
+        this.winGoMenu.setInteractive().on('pointerdown', function(pointer) {
+            this.scene.enemies.stopEngines();
+            this.uiClickSound.play();
+            this.scene.cameras.main.fadeOut(1000, 0, 0, 0);
+
+            this.scene.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, (cam, effect) => {
+                this.scene.scene.start('Menu');
+            })
+        }, this);
     }
 
     startGameUI ()
