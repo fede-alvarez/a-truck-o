@@ -16,6 +16,11 @@ export default class Background extends Phaser.GameObjects.Group
         bgSky.setOrigin(0);
         this.add(bgSky);
 
+        let bgMountain2 = this.scene.add.image(this.canvasSize.w,0,'mountain');
+        bgMountain2.setOrigin(0);
+        bgMountain2.tint = 0x00000;
+        this.add(bgMountain2);
+        
         let bgClouds = this.scene.add.image(this.canvasSize.w + 20,-10,'clouds');
         bgClouds.setOrigin(0);
         this.add(bgClouds);
@@ -39,8 +44,16 @@ export default class Background extends Phaser.GameObjects.Group
             ease: 'Linear',
             repeat: -1,
         });
+
+        this.mountains2Tween = this.scene.tweens.add({
+            targets: bgMountain2,
+            x: -320,
+            duration:30000,
+            ease: 'Linear',
+            repeat: -1,
+        });
         
-        this.createTrees();
+        //this.createTrees();
         this.createSpeedLines();
         this.createGroundTiles();
         this.createRocks();
@@ -51,19 +64,23 @@ export default class Background extends Phaser.GameObjects.Group
     createTrees ()
     {
         /** Trees */
-        for (let i = 0; i < 10; i++)
+        let tree;
+        for (let i = 0; i < 15; i++)
         {
-            let randomTree = (i%2 == 0) ? 'tree2' : 'tree';
-            let tree = this.scene.add.image(i*200, 32, randomTree);
+            tree = this.scene.add.image(i*32, 32, 'tree2');
+            tree.setOrigin(.5);
             
-            let scalePos = this.calculateScale(tree.y);
-            tree.setScale(scalePos.x,scalePos.y);
+            let randScale = Phaser.Math.Between(0.3, 0.6);
+            tree.setScale(randScale, randScale);
+            
+            //let scalePos = this.calculateScale(tree.y);
+            //tree.setScale(scalePos.x,scalePos.y);
             this.add(tree);
-            tree.depth=99;
 
+            
             this.scene.tweens.add({
                 targets: tree,
-                x: tree.x - 200,
+                x: tree.x - 340,
                 duration:1000,
                 ease: 'Linear',
                 repeat: -1,

@@ -81,7 +81,7 @@ export default class Boot extends Phaser.Scene
         this.load.on('progress', (value) => {
             progress.clear();
             progress.fillStyle(0xffffff, 1);
-            progress.fillRect(0, this.sys.game.config.height / 2, this.sys.game.config.width * value, 60);
+            progress.fillRect(0, this.sys.game.config.height / 2 - 30, this.sys.game.config.width * value, 60);
         });
 
         this.load.on('complete', () => {

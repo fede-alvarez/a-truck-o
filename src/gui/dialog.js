@@ -41,6 +41,8 @@ export default class Dialog extends Phaser.GameObjects.Container
         this.mouse = this.scene.add.image(0,0, 'mouseClick');
         this.mouse.x = this.base.x + this.base.width * 0.5 - 2;
         this.mouse.y = this.base.y;
+
+        this.avatar.alpha = this.text.alpha = this.mouse.alpha = 0;
         
         this.add(this.base);
         this.add(this.avatar);
@@ -79,6 +81,12 @@ export default class Dialog extends Phaser.GameObjects.Container
         if (dialog)
         {
             this.scene.tweens.add({
+                targets: [this.avatar, this.text, this.mouse],
+                alpha:1,
+                duration:400
+            });
+
+            this.scene.tweens.add({
                 targets: this.base,
                 scaleY:1,
                 duration:1000,
@@ -111,6 +119,12 @@ export default class Dialog extends Phaser.GameObjects.Container
             this.currentDialog = null;
 
             this.scene.tweens.add({
+                targets: [this.avatar, this.text, this.mouse],
+                alpha:0,
+                duration:400
+            });
+
+            this.scene.tweens.add({
                 targets: this.base,
                 scaleY:0,
                 duration:1000,
@@ -118,6 +132,7 @@ export default class Dialog extends Phaser.GameObjects.Container
                 onComplete : function()
                 {
                     self.desactivateAll();
+                    self.avatar.alpha = self.text.alpha = self.mouse.alpha = 1;
                 }
             });
             

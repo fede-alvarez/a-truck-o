@@ -4,7 +4,7 @@ export default class Enemies extends Phaser.GameObjects.Group
 {
     constructor(scene)
     {
-        super(scene);
+        super(scene, [], { maxSize:10 });
 
         this.maxScalePoint = scene.maxScalePoint;
         this.minScalePoint = scene.minScalePoint;
@@ -46,7 +46,8 @@ export default class Enemies extends Phaser.GameObjects.Group
         this.followPlayer();
 
         /** Bullets */
-        this.bullets.children.each(function(b) {
+        this.bullets.children.each(function(b) 
+        {
             if (b.active) 
             {
                 let bulletScale = this.calculateScale(b.y);

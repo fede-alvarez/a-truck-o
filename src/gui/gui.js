@@ -28,6 +28,7 @@ export default class Gui extends Phaser.GameObjects.Group
         {
             this.depth = 200;
 
+            // - 30
             this.title = this.scene.add.text(this.canvasSize.w * 0.5, this.canvasSize.h * 0.5 - 30, 'a-truck-o!', this.altFontSettings);
             this.title.setOrigin(0.5);
     

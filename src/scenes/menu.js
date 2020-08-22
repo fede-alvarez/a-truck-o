@@ -3,6 +3,7 @@ import phaserJuice from "../libs/phaserJuice";
 import MaxScalePoint from "../helpers/maxScalePoint";
 import MinScalePoint from "../helpers/minScalePoint";
 import Gui from "../gui/gui";
+import Player from "../entities/player";
 
 export default class Menu extends Phaser.Scene
 {
@@ -32,6 +33,10 @@ export default class Menu extends Phaser.Scene
 
         /** Background */
         this.bg = new Background(this);
+
+        /** Player */
+        this.player = new Player(this, 34, 90);
+        this.player.engineSound.setVolume(0.1);
 
         this.gui = new Gui(this, 'menu');
 
