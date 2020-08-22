@@ -66,7 +66,7 @@ export default class Game extends Phaser.Scene
         this.physics.add.collider(this.enemies, this.bg.limitsGroup);
 
         /** Game Progression */
-        this.goalDistance = 30;
+        this.goalDistance = 50;
         this.distance = 0;
         this.distanceTimer = 0;
         this.distanceAddTime = 120;
@@ -110,8 +110,9 @@ export default class Game extends Phaser.Scene
     {
         this.player.canMove = true;
 
-        this.enemies.enemiesNumber = 3;
-        this.enemies.createEnemies();
+        //this.enemies.enemiesNumber = 3;
+        //this.enemies.createEnemies();
+        this.enemies.spawnMultiple(3);
 
         this.obstacles = new Obstacles(this);
         this.ramps = new Ramps(this);

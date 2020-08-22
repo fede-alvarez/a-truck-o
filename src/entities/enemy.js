@@ -6,6 +6,8 @@ export default class Enemy extends Phaser.GameObjects.Container
     {
         super(scene, x, y);
 
+        this.scene = scene;
+
         let shadow = scene.add.graphics();
         shadow.fillStyle(0x000000, 0.15);
         shadow.fillEllipse(0, 5, 14, 8);
@@ -27,11 +29,12 @@ export default class Enemy extends Phaser.GameObjects.Container
 
         this.depth = this.y;
         
-        this.health = 50;
+        this.health = Phaser.Math.Between(50,80);//50;
+        this.fireRate = Phaser.Math.Between(40,50);
         this.canMove = true;
         this.isJumping = false;
 
-        this.hp = new HealthBar(scene, this.x, this.y - 16);
+        this.hp = new HealthBar(scene, this.x, this.y - 16, this.health);
         this.hp.value = this.health;
         this.hp.visible = false;
 
@@ -41,7 +44,7 @@ export default class Enemy extends Phaser.GameObjects.Container
         this.jumpSound = scene.sound.add('sfxCarsHit', {volume:0.2});
         this.explosionSound = scene.sound.add('sfxExplosion', {volume:0.9});
         this.engineSound = scene.sound.add('sfxEnemyEngine', {volume:0.1, loop:true});
-        this.engineSound.play();
+        //this.engineSound.play();
     }
 
     doJumpAnimation ()
@@ -86,8 +89,8 @@ export default class Enemy extends Phaser.GameObjects.Container
 
     doDamage ()
     {
-        this.health -= 10;
-        this.hp.decrease(10);
+        this.health -= 8;
+        this.hp.decrease(8);
         this.hp.draw();
         this.hp.visible = true;
 
@@ -105,7 +108,43 @@ export default class Enemy extends Phaser.GameObjects.Container
         explosion.setPosition(this.x, this.y);
         explosion.explode();
 
-        this.hp.destroy();
-        this.destroy();
+        this.body.setEnable(false);
+        this.body.setVelocityX(0);
+        this.body.setVelocityY(0);
+
+        this.hp.clearBar();
+        this.setActive(false);
+        this.setVisible(false);
+
+        this.x = -1000;
+        this.y = -1000;
+    }
+
+    deactivateEnemy ()
+    {
+        this.body.setEnable(false);
+        this.body.setVelocityX(0);
+        this.body.setVelocityY(0);
+
+        this.hp.clearBar();
+        this.setActive(false);
+        this.setVisible(false);
+
+        this.x = -1000;
+        this.y = -1000;
+    }
+
+    resetAll ()
+    {
+        this.engineSound.play();
+        this.health = Phaser.Math.Between(50,80);
+        this.hp.value = this.health;
+        this.hp.updateP();
+
+        this.body.setEnable(true);
+        this.setActive(true);
+        this.setVisible(true);
+
+        this.body.setVelocity(20, 0); 
     }
 }

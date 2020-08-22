@@ -12,7 +12,7 @@ export default class Enemies extends Phaser.GameObjects.Group
         this.scene = scene;
         this.canvasSize = this.scene.getCanvasSize();
 
-        this.enemiesNumber = 0;
+        this.enemiesNumber = 10;
 
         this.player = this.scene.player;
 
@@ -22,6 +22,11 @@ export default class Enemies extends Phaser.GameObjects.Group
         this.fireRate = 50;
         this.canFire = true;
         this.followRange = 80;
+
+        /** Enemies Props */
+        this.spawnTime = 900;
+        this.spawnTimer = 0;
+        this.isSpawning = false;
 
         this.explosion = scene.add.particles('explosion').createEmitter({
             x: -1000,
@@ -44,7 +49,41 @@ export default class Enemies extends Phaser.GameObjects.Group
     {
         this.scaleWhileActive();
         this.followPlayer();
+        this.updateBullets();
 
+        this.spawnTimer++;
+
+        if (this.spawnTimer != 0 && this.spawnTimer % this.spawnTime == 0)
+        {
+            this.spawnTimer = 0;
+            this.spawnMultiple(Phaser.Math.Between(2,3));
+        }
+    }
+
+    spawnEnemy ()
+    {
+        let x = Phaser.Math.Between(32, 128) * -1;
+        let y = Phaser.Math.Between(50, this.canvasSize.h - 20);
+
+        let enemy = this.get(x, y);
+        
+        if (enemy) 
+        {
+            this.scene.physics.world.enable(enemy);
+            enemy.resetAll();
+        }
+    }
+
+    spawnMultiple ( amount )
+    {
+        for (let i = 0; i < amount; i++)
+        {
+            this.spawnEnemy();
+        }
+    }
+
+    updateBullets ()
+    {
         /** Bullets */
         this.bullets.children.each(function(b) 
         {
@@ -84,8 +123,11 @@ export default class Enemies extends Phaser.GameObjects.Group
 
             this.add(enemy);
 
+            enemy.setActive(false);
+            enemy.setVisible(false);
+
             //let randSpeedX = Phaser.Math.Between(20, 40);
-            enemy.body.setVelocity(20, 0);   
+            //enemy.body.setVelocity(20, 0);   
         }
 
         this.scene.physics.add.collider(player, this, this.onPlayerImpact, null, this);
@@ -100,7 +142,7 @@ export default class Enemies extends Phaser.GameObjects.Group
         
         bullet.destroy();
         this.shakeIt();
-        player.doDamage(1);
+        player.doDamage(2);
         this.playerHitSound.play();
     }
 
@@ -178,7 +220,8 @@ export default class Enemies extends Phaser.GameObjects.Group
 
                 if (playerDistance < this.followRange)
                 {
-                    this.scene.physics.moveTo(enemy, this.player.x + 16, this.player.y - 16, 20);
+                    // 20
+                    this.scene.physics.moveTo(enemy, this.player.x + 16, this.player.y - 16, 15); 
                     this.fireTime++;
 
                     if (this.fireTime != 0 && this.fireTime % this.fireRate == 0)
@@ -188,11 +231,15 @@ export default class Enemies extends Phaser.GameObjects.Group
                     }
                 }
 
+                /** Pass right limit */
                 if (enemy.x > this.canvasSize.w + 32) {
-                    enemy.x = -32 - Phaser.Math.Between(256, 512);
+                    enemy.x = -32 - Phaser.Math.Between(128, 256);
+                    enemy.y = Phaser.Math.Between(50, this.canvasSize.h - 20);
                 }
 
-                
+                if (enemy.y > this.canvasSize.h + 32 ) {
+                    enemy.deactivateEnemy();
+                }
             }
         }.bind(this));
     }

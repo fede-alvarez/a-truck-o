@@ -1,6 +1,6 @@
 export default class HealthBar extends Phaser.GameObjects.Container
 {
-    constructor (scene, x, y)
+    constructor (scene, x, y, maxHealthValue)
     {
         super(scene);
         
@@ -10,7 +10,7 @@ export default class HealthBar extends Phaser.GameObjects.Container
         this.x = x;
         this.y = y;
         this.value = 100;
-        this.p = this.magin_num / 50;
+        this.p = this.magin_num / maxHealthValue; //50;
 
         this.draw();
         this.add(this.bar);
@@ -30,6 +30,16 @@ export default class HealthBar extends Phaser.GameObjects.Container
         this.draw();
 
         return (this.value === 0);
+    }
+
+    clearBar ()
+    {
+        this.bar.clear();
+    }
+
+    updateP ()
+    {
+        this.p = this.magin_num / this.value;
     }
 
     draw ()
