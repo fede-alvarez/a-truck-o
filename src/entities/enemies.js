@@ -4,7 +4,7 @@ export default class Enemies extends Phaser.GameObjects.Group
 {
     constructor(scene)
     {
-        super(scene, [], { maxSize:10 });
+        super(scene, [], { classType: Enemy, maxSize:10 });
 
         this.maxScalePoint = scene.maxScalePoint;
         this.minScalePoint = scene.minScalePoint;
@@ -17,7 +17,7 @@ export default class Enemies extends Phaser.GameObjects.Group
         this.player = this.scene.player;
 
         /** Bullets */
-        this.bullets = scene.physics.add.group({ defaultKey:'bullet', maxSize: 20 });
+        this.bullets = scene.add.group({ defaultKey:'bullet', maxSize: 30 });
         this.fireTime = 0;
         this.fireRate = 50;
         this.canFire = true;
@@ -41,8 +41,11 @@ export default class Enemies extends Phaser.GameObjects.Group
         this.shootSound = scene.sound.add('sfxShoot', {volume:0.15});
         this.playerHitSound = scene.sound.add('sfxCarsHit', {volume:0.4});
         this.carHitSound = scene.sound.add('sfxCarsHit', {volume:0.2});
-        
-        this.createEnemies();
+
+        this.scene.physics.add.collider(this.player, this, this.onPlayerImpact, null, this);
+        this.scene.physics.add.collider(this, this, this.carOnCar, null, this);
+        this.scene.physics.add.collider(this, this.player.bullets, this.onBulletImpact, null, this);
+        this.scene.physics.add.overlap(this.bullets, this.player, this.onPlayerBullet, null, this);
     }
 
     update ()
@@ -110,37 +113,15 @@ export default class Enemies extends Phaser.GameObjects.Group
         }.bind(this));
     }
 
-    createEnemies ()
-    {
-        let player = this.scene.player;
-
-        for (let i = 0; i < this.enemiesNumber; i++)
-        {
-            let enemy = new Enemy(this.scene, 0, 0);
-            
-            enemy.x = Phaser.Math.Between(32, 128) * -1;
-            enemy.y = Phaser.Math.Between(50, this.canvasSize.h - 20);
-
-            this.add(enemy);
-
-            enemy.setActive(false);
-            enemy.setVisible(false);
-
-            //let randSpeedX = Phaser.Math.Between(20, 40);
-            //enemy.body.setVelocity(20, 0);   
-        }
-
-        this.scene.physics.add.collider(player, this, this.onPlayerImpact, null, this);
-        this.scene.physics.add.collider(this, this, this.carOnCar, null, this);
-        this.scene.physics.add.collider(this, player.bullets, this.onBulletImpact, null, this);
-        this.scene.physics.add.overlap(this.bullets, player, this.onPlayerBullet, null, this);
-    }
-
-    onPlayerBullet (player, bullet)
+    onPlayerBullet (bullet, player)
     {
         if (player.isJumping) return;
+        console.log("Impact!");
         
-        bullet.destroy();
+        bullet.body.setEnable(false);
+        bullet.setActive(false);
+        bullet.setVisible(false);
+
         this.shakeIt();
         player.doDamage(2);
         this.playerHitSound.play();
@@ -178,11 +159,11 @@ export default class Enemies extends Phaser.GameObjects.Group
             this.scene.physics.world.enable(bullet);
             bullet.setActive(true);
             bullet.setVisible(true);
-            //this.scene.juice.flash(bullet);
-            let angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, this.player.x, this.player.y);
-            bullet.rotation=angle;
+            
+            let variation = {x:Phaser.Math.Between(0,16), y:Phaser.Math.Between(0,16)};
 
-            let variation = {x:Phaser.Math.Between(0,16), y:Phaser.Math.Between(0,16)}
+            let angle = Phaser.Math.Angle.Between(enemy.x, enemy.y, this.player.x + variation.x, this.player.y + variation.y);
+            bullet.rotation=angle;
 
             this.scene.physics.moveTo(bullet, this.player.x + variation.x, this.player.y + variation.y, 200);
         }
@@ -218,10 +199,10 @@ export default class Enemies extends Phaser.GameObjects.Group
             {
                 let playerDistance = Phaser.Math.Distance.Between(this.player.x, this.player.y, enemy.x, enemy.y);
 
-                if (playerDistance < this.followRange)
+                if (playerDistance < this.followRange || enemy.shootOnce)
                 {
                     // 20
-                    this.scene.physics.moveTo(enemy, this.player.x + 16, this.player.y - 16, 15); 
+                    this.scene.physics.moveTo(enemy, this.player.x + 16, this.player.y - 16, 12); 
                     this.fireTime++;
 
                     if (this.fireTime != 0 && this.fireTime % this.fireRate == 0)

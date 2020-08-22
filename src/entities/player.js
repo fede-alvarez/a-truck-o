@@ -53,6 +53,10 @@ export default class Player extends Phaser.GameObjects.Container
         this.isDead = false;
         this.canMove = true;
         this.isJumping = false;
+        this.isShaking = false;
+
+        this.jumpTime = 0;
+        this.jumpMaxTime = 50;
 
         this.body.setSize(this.body.width, this.body.height*0.3);
         this.body.setOffset(-30,-4);
@@ -197,6 +201,18 @@ export default class Player extends Phaser.GameObjects.Container
                 this.body.setVelocityX(this.vel.x);
                 this.engineSound.setVolume(0.6);
             }
+
+            if (this.isJumping)
+            {
+                this.jumpTime++;
+
+                if (this.jumpTime != 0 && this.jumpTime % this.jumpMaxTime == 0)
+                {
+                    this.isJumping = false;
+                    this.jumpTime = 0;
+                    console.log("Jump false");
+                }
+            }
         }
 
         /** Scaling */
@@ -235,13 +251,19 @@ export default class Player extends Phaser.GameObjects.Container
         bullet.depth = 50;
         let self = this;
         
-        this.scene.juice.shake(this.scene.cameras.main, {
-            x:0.5,
-            y:0.5,
-            onComplete: function(tween, target) {
-                self.scene.cameras.main.setPosition(0,0);
-            }
-        });
+        if (!this.isShaking)
+        {
+            this.isShaking = true;
+            this.scene.juice.shake(this.scene.cameras.main, {
+                x:0.5,
+                y:0.5,
+                onComplete: function(tween, target) {
+                    self.scene.cameras.main.setPosition(0,0);
+                    self.isShaking = false;
+                }
+            });
+        }
+
         
         if (bullet) 
         {

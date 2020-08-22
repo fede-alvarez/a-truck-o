@@ -66,7 +66,7 @@ export default class Game extends Phaser.Scene
         this.physics.add.collider(this.enemies, this.bg.limitsGroup);
 
         /** Game Progression */
-        this.goalDistance = 50;
+        this.goalDistance = 40;
         this.distance = 0;
         this.distanceTimer = 0;
         this.distanceAddTime = 120;

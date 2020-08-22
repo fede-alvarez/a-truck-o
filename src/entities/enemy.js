@@ -30,13 +30,15 @@ export default class Enemy extends Phaser.GameObjects.Container
         this.depth = this.y;
         
         this.health = Phaser.Math.Between(50,80);//50;
-        this.fireRate = Phaser.Math.Between(40,50);
+        //this.fireRate = Phaser.Math.Between(40,50);
         this.canMove = true;
         this.isJumping = false;
 
         this.hp = new HealthBar(scene, this.x, this.y - 16, this.health);
         this.hp.value = this.health;
         this.hp.visible = false;
+
+        this.shootOnce = false;
 
         this.showHPCounter = 0;
         this.showHPTime = 100;
@@ -84,15 +86,19 @@ export default class Enemy extends Phaser.GameObjects.Container
         {
             this.showHPCounter = 0;
             this.hp.visible = false;
+            this.hp.clearBar();
         }
     }
 
     doDamage ()
     {
+        if (!this.shootOnce)
+            this.shootOnce = true;
+        
         this.health -= 8;
         this.hp.decrease(8);
         this.hp.draw();
-        this.hp.visible = true;
+        //this.hp.visible = true;
 
         if (this.health <= 0)
             this.isDead();
@@ -103,6 +109,8 @@ export default class Enemy extends Phaser.GameObjects.Container
         //console.log("You're dead!");
         this.explosionSound.play();
         this.engineSound.stop();
+
+        this.shootOnce = false;
 
         let explosion = this.scene.enemies.explosion;
         explosion.setPosition(this.x, this.y);
